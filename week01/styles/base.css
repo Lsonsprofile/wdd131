@@ -11,7 +11,7 @@
   --nav-text-color: #ffffff;
   --aside-color: #b7cbde;
   --footer-color: #2c3e50;
-  --main-text-color: #ff9807;
+  --main-text-color: #daff07;
   --background-text-color: #e0e9f8;
   --light-background-color: #a9bfe0b9;
   --dark-blue-color: #000810;
@@ -73,8 +73,9 @@ footer {
 }
 
 #lastModified {
-    font-size: 0.9em;
+    font-size: 1em;
     color: var(--main-text-color);
+    padding: 0.5rem;
 }
 
 nav ul {
