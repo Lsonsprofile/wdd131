@@ -172,7 +172,7 @@ main h2 {
 
 
 
-@media (max-width: 550px) {
+@media screen and (max-width: 550px) {
   .section-main {
     grid-column: 1/3;
   }
