@@ -1,0 +1,30 @@
+@media screen and (min-width: 550px) {
+  nav {
+    display: block;
+  }
+
+  nav ul {
+    display: flex;
+    gap: 1rem;
+    list-style: none;
+    margin: 0;
+    padding: 0;
+  }
+
+  nav a {
+    color: var(--text-color);
+    padding: 0.5rem 1rem;
+    text-decoration: none;
+  }
+
+  #menu {
+    display: none;
+  }
+}
+
+@media screen and (min-width: 800px) {
+    main {
+        grid-template-columns: repeat(3, 1fr);
+        max-width: 900px;
+    }
+}
