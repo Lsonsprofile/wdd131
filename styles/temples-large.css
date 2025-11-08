@@ -1,25 +1,26 @@
 @media screen and (min-width: 550px) {
+  main {
+    grid-template-columns: repeat(2, 1fr);
+    max-width: 700px;
+  }
+
+  #menu {
+    display: none;
+  }
+
   nav {
     display: block;
   }
 
   nav ul {
     display: flex;
-    gap: 1rem;
-    list-style: none;
-    margin: 0;
-    padding: 0;
   }
 
   nav a {
     color: var(--text-color);
     padding: 0.5rem 1rem;
-    text-decoration: none;
   }
 
-  #menu {
-    display: none;
-  }
 }
 
 @media screen and (min-width: 800px) {
