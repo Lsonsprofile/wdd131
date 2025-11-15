@@ -76,7 +76,7 @@ footer p {
   width: 30px;
   height: 30px;
   margin-left: 10px;
-  background: url("/images/cloudy.svg") no-repeat center/contain;
+  background: url("../images/cloudy.svg") no-repeat center/contain;
 }
 
 main {
