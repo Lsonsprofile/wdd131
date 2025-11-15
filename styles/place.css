@@ -8,7 +8,7 @@
   --primary-color: #de2910;
   --accent-color: #ffde00;
   --text-color: #222222;
-  --background-color: #de2910;
+  --background-color: #8a2f23;
   --link-color: #ffde00;
   --color:  #f3eeda;
 }
@@ -30,7 +30,7 @@ header h1 {
     padding: 20px;
     text-align: center;
     font-weight: bold;
-    color: var(--color);
+    color: var(--accent-color);
 }
 
 
@@ -39,6 +39,10 @@ footer {
     padding: 20px;
     background-color: var(--background-color);
     color: var(--color);
+}
+
+footer p {
+    color: var(--link-color);
 }
 
 .data-box p,
