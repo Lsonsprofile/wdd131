@@ -9,6 +9,19 @@
     border-radius: 10px;
 }
 
+.weather-box img {
+    display: none;
+}
+
+.weather-box h2::after {
+  content: "";
+  display: inline-block;
+  width: 30px;
+  height: 30px;
+  margin-left: 10px;
+  background: url("../images/cloudy.svg") no-repeat center/contain;
+}
+
 .data-box h2 {
     color: var(--color);
     background-color: var(--text-color);

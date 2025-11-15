@@ -70,13 +70,11 @@ footer p {
   margin: 0 auto;
 }
 
-.weather-box h2::after {
-  content: "";
-  display: inline-block;
-  width: 30px;
-  height: 30px;
-  margin-left: 10px;
-  background: url("../images/cloudy.svg") no-repeat center/contain;
+.weather-box img {
+    width: 30px;
+    height: 30pxpx;
+    margin: 0;
+    padding: 0;
 }
 
 main {
