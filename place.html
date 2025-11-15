@@ -1,0 +1,51 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="description" content="Explore Beijing, China – culture, food, and weather. Built by Emmanuel Ndogo for WDD 131.">
+    <meta name="author" content="Emmanuel Ndogo">
+    <link rel="stylesheet" href="styles/place.css">
+    <link rel="stylesheet" href="styles/place-large.css">
+    <script defer src="scripts/place.js"></script>
+    <title>Beijing, China | WDD 131</title>
+</head>
+<body>
+    <header><h1>China</h1></header>
+
+    <main>
+        <picture>
+            <source srcset="images/beijing-temple-mobile.webp" media="(max-width: 600px)">
+            <source srcset="images/beijing-temple-tablet.webp" media="(max-width: 900px)">
+            <img src="images/beijing-temple-desktop.webp"
+                  alt="Temple of Heaven in Beijing"
+                  class="hero-image">
+        </picture>
+
+        <section class="data-box">
+            <h2>Data</h2>
+            <p><strong>Area:</strong> 9,596,961 km<sup>2</sup></p>
+            <p><strong>Population:</strong> Approximately 1.41 billion</p>
+            <p><strong>Capital:</strong> Beijing</p>
+            <p><strong>Languages:</strong> Mandarin Chinese (official), plus regional languages</p>
+            <p><strong>Currency:</strong> Renminbi (RMB), Chinese Yuan (CNY)</p>
+            <p><strong>Time Zone:</strong> China Standard Time (CST), UTC+8</p>
+            <p><strong>Calling Code:</strong> +86</p>
+            <p><strong>Internet TLD:</strong> .cn</p>
+        </section>
+
+        <section class="weather-box">
+            <div class="weather-header"><h2>Weather</h2></div>
+            <p><strong>Current Temperature:</strong> 15&deg;C</p>
+            <p><strong>Humidity:</strong> 40%</p>
+            <p><strong>Wind Speed:</strong> 5 km/h</p>
+            <p><strong>Weather Conditions:</strong> Partly Cloudy</p>
+        </section>
+    </main>
+
+    <footer>
+        <p>&copy; <span id="year"></span> Emmanuel Ndogo | Beijing, China</p>
+        <p>Last modified: <span id="lastModified"></span></p>
+    </footer>
+</body>
+</html>
