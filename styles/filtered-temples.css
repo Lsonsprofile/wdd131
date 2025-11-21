@@ -120,6 +120,7 @@ h1 {
 main {
     background-color: var(--accent-color);
     max-width: 1000px;
+    min-height: 800px;
     margin: 0 auto;
 }
 
