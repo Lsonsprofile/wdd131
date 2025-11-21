@@ -117,10 +117,6 @@ h1 {
     margin: 1rem 0;
 }
 
-figure {
-    width: 100%;
-}
-
 main {
     background-color: var(--accent-color);
     max-width: 1200px;
