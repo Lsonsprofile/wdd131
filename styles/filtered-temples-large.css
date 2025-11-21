@@ -1,7 +1,6 @@
 @media screen and (min-width: 550px) {
   #temple-container {
     grid-template-columns: repeat(2, 1fr);
-    max-width: 700px;
   }
 
   #menu {
@@ -31,11 +30,17 @@
     font-weight: bold;
   }
 
+  figcaption {
+    font-size: 1.1rem;
+  }
+
 }
 
 @media screen and (min-width: 800px) {
     #temple-container {
         grid-template-columns: repeat(3, 1fr);
-        max-width: 1000px;
     }
+    figcaption {
+    font-size: 1.1rem;
+  }
 }
