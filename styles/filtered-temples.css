@@ -136,10 +136,12 @@ figcaption {
     background-color: var(--background-color);
 }
 
-figure img {
+#temple-container img {
     display: block;
     width: 100%;
     border-radius: 4px;
+    height: auto;
+    aspect-ratio: 400/300;
 }
 
 footer {

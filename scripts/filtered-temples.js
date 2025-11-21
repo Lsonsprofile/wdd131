@@ -124,7 +124,7 @@ function displayTemples(templeArray) {
     img.alt = `${temple.templeName} Temple`;
     img.loading = "lazy";               // ← This is the native lazy loading the assignment wants
     img.width = 400;
-    img.height = 250;
+    img.height = 300;
 
     // Create the <figcaption> with all the info
     const figcaption = document.createElement("figcaption");
