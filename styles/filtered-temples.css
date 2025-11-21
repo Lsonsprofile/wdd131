@@ -105,7 +105,8 @@ nav.show a {
 #temple-container {
     display: grid;
     grid-template-columns: 1fr;
-    min-height: 800px;
+    height: 100%;
+    width: 100%;
     padding: 10px;
     margin: 0 auto;
     gap: 2rem;
@@ -141,6 +142,7 @@ figcaption {
 #temple-container img {
     display: block;
     width: 100%;
+    object-fit: cover;
     border-radius: 4px;
     height: auto;
 }
