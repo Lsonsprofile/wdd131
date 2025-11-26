@@ -1,0 +1,116 @@
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+}
+
+:root {
+    --dark-blue: #00040a;
+    --cta-orange: #360603;
+    --background-gray: #e9edf5;
+    --contrast-navy: #1E293B;
+    --background-light-arsh: #dce0e7;
+    --shadow-lg: 2px 4px 8px rgba(0,0,0,0.2);
+    --shadow-sm: 2px 4px 8px rgba(0,0,0,0.4);
+}
+
+body {
+    font-family: 'Inter', sans-serif;
+    background-color: var(--background-gray);
+    color: var(--dark-blue);
+    min-height: 100vh;
+}
+
+main {
+    padding: 0.5rem;
+    font-size: 20px;
+}
+header {
+    background-color: var(--contrast-navy);
+    color: var(--background-gray);
+    text-align: center;
+    font-size: 1.8rem;
+}
+
+.colors {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 1rem;
+  margin: 2rem 0;
+  padding: 0.5rem;
+}
+
+.color {
+  display: flex;
+  align-items: center;
+  gap: 1rem;
+  width: 100%;                  
+  padding: 0.75rem;
+  background: var(--background-light-arsh);
+  border-radius: 10px;
+  box-shadow: var(--shadow-lg);
+}
+
+.swatch {
+  width: 48px;
+  height: 48px;
+  border-radius: 10px;
+  border: var(--shadow-sm);
+  flex-shrink: 0;
+  box-shadow: var(--shadow-sm);
+}
+
+.color-info {
+  flex: 1;
+}
+
+.color-info strong {
+  font-family: 'Outfit', sans-serif;
+  font-size: 1.1rem;
+  display: block;
+  margin-bottom: 0.25rem;
+}
+
+.color-info p {
+  margin: 0;
+  font-size: 0.95rem;
+  color: var(--dark-blue);
+}
+
+.wireframe-img, .logo {
+  width: 100%;
+  max-width: 300px;
+  height: auto;
+  display: block;
+  margin: 1rem auto;
+  border-radius: 8px;
+  box-shadow: var(--shadow-sm);
+}
+
+footer {
+    text-align: center;
+    padding: 1.5rem;
+    background-color: var(--contrast-navy);
+    color: var(--background-gray);
+    font-size: 1.5rem;
+}
+
+section {
+    margin: 3rem 0;
+}
+
+h2 {
+    margin: 1rem 0;
+    color: var(--cta-orange);
+}
+
+figcaption {
+    display: block;
+    font-size: 0.8rem;
+    text-align: center;
+    padding: 0;
+}
+
+h1, h2, h3, header, footer, figcaption, .color strong {
+    font-family: 'Outfit', sans-serif;
+}
