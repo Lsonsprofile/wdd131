@@ -1,0 +1,102 @@
+* {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+}
+
+:root {
+  --header-top:     #6d2da8;
+  --header-bottom:  #5a1d92;
+  --card-bg:        #ffffff;
+  --form-bg:        #f8f8f8;
+  --border-light:   #ebe2f1;
+  --text-dark:      #333333;
+  --text-medium:    #5f0404;
+  --text-light:     #888888;
+  --star-filled:    #f39c12;
+  --star-empty:     #cccccc;
+  --btn-top:        #6d2da8;
+  --btn-bottom:     #5a1d92;
+  --required:       hsl(6, 63%, 46%);
+}
+
+body {
+  min-height: 100vh;
+  background-color: var(--form-bg);
+  font-family: "Segoe UI", sans-serif;
+  color: var(--text-dark);
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  padding: 2rem;
+}
+
+header {
+    width: 100%;
+    max-width: 600px;
+}
+
+
+h1 {
+  background: linear-gradient(to bottom, var(--header-top), var(--header-bottom));
+  color: var(--card-bg);
+  padding: 1rem 2rem;
+  border-radius: 6px;
+  margin-bottom: 1.5rem;
+  text-align: center;
+}
+
+
+#reviewCount {
+  font-weight: bold;
+  color: var(--text-medium);
+  margin-bottom: 1rem;
+}
+
+
+#reviewDetails {
+  background-color: var(--card-bg);
+  border: 1px solid var(--border-light);
+  border-radius: 8px;
+  padding: 1.5rem;
+  box-shadow: 0 0 10px rgba(0,0,0,0.1);
+  width: 100%;
+  max-width: 600px;
+}
+
+#reviewDetails ul {
+  list-style: none;
+}
+
+#reviewDetails li {
+  margin: 0.5rem 0;
+  color: var(--text-dark);
+}
+
+#reviewDetails strong {
+  color: var(--text-medium);
+}
+
+main a {
+    background-color: var(--border-light);
+    padding: 0.5rem 1rem;
+    border-radius: 6px;
+    text-decoration: none;
+    margin-top: 1rem;
+    margin-bottom: 1rem;
+    display: inline-block;
+    font-weight: bold;
+    box-shadow: 1px 1px 5px rgba(0,0,0,0.1);
+}
+
+
+footer {
+  margin-top: auto;
+  text-align: center;
+  background-color: var(--header-bottom);
+  color: var(--card-bg);
+  padding: 1rem;
+  border-radius: 6px;
+  width: 100%;
+  max-width: 600px;
+}

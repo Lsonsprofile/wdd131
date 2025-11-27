@@ -1,0 +1,22 @@
+@media (max-width: 480px) {
+  .star-rating {
+    flex-direction: column;     
+    align-items: center;       
+    gap: 0.5rem;                    
+  }
+
+  .star-option {
+    flex-direction: column;     
+    align-items: center;
+  }
+
+  .star-option label {
+    font-size: 1.5rem;           
+    margin-bottom: 0.1rem;
+  }
+
+  .star-option input[type="radio"] {
+    width: 15px;
+    height: 15px;
+  }
+}

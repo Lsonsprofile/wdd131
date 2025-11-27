@@ -1,0 +1,148 @@
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+}
+
+:root {
+  --header-top:     #6d2da8;
+  --header-bottom:  #5a1d92;
+  --card-bg:        #ffffff;
+  --form-bg:        #f8f8f8;
+  --border-light:   #ebe2f1;
+  --text-dark:      #333333;
+  --text-medium:    #5f0404;
+  --text-light:     #888888;
+  --star-filled:    #f39c12;
+  --star-empty:     #cccccc;
+  --btn-top:        #6d2da8;
+  --btn-bottom:     #5a1d92;
+  --required:       hsl(6, 63%, 46%);
+}
+
+body {
+    min-height: 100vh;
+    background-color: var(--form-bg);
+}
+
+h1 {
+    text-align: center;
+    background-color: var(--header-top);
+    color: var(--card-bg);
+    font-size: 2rem;
+    padding: 1rem;
+}
+
+.star-rating {
+  display: flex;
+  justify-content: space-between;
+  max-width: 500px;
+}
+
+.star-option {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  margin-bottom: 0.5rem;
+}
+
+.star-option label {
+  order: -1;
+  font-size: 1.5rem;
+  color: #ccc;
+  cursor: pointer;
+  transition: color 0.3s ease;
+}
+
+.star-option input[type="radio"] {
+  width: 20px;
+  height: 20px;
+}
+
+.star-option:has(input[type="radio"]:checked) label {
+  color: #f39c12;
+}
+
+
+legend small,
+label small{
+  font-style: italic;
+}
+
+.revform {
+  width: 100%;
+  max-width: 600px;
+  padding: 1rem;
+  border-radius: 6px;
+  box-shadow: 0 0 10px rgba(0,0,0,0.1);
+  background-color: var(--card-bg);
+  margin: 2rem auto;
+  background-color: var(--border-light);
+}
+
+.revform fieldset {
+    margin: 2rem 0;
+    border: 1px solid var(--text-light);
+    border-radius: 6px;
+    padding: .5rem 2%;
+}
+
+.revform legend {
+    padding: 0.5rem;
+    font-size: 1.2rem;
+    color: var(--text-dark);
+}
+
+.revform .s-label {
+    display: block;
+    padding-top: 1rem;
+    color: var(--text-medium);
+    font-size: 1.2rem;
+}
+
+.revform input[type="date"],
+.revform input[type="text"],
+.revform input[type="email"],
+.revform input[type="number"],
+.revform input[type="tel"],
+.revform select,
+.revform textarea {
+    background-color: #eee;
+    display: block;
+    border: solid 1px #999;
+    border-radius: 6px;
+    padding: .75rem;
+    color: #555;
+    width: 100%;
+    max-width: 600px;
+    appearance: none;
+}
+
+
+footer {
+    text-align: center;
+    padding: 1rem;
+    background-color: var(--header-bottom);
+    color: var(--card-bg);
+}
+
+.revform input[type="submit"] {
+    border: none;
+    background-image: linear-gradient(var(--header-bottom), var(--text-dark));
+    color: #fff;
+    border-radius: 6px;
+    padding: .8rem;
+    width: 100%;
+    max-width: 600px;
+    box-shadow: 1px 1px 4px #999;
+    font-weight: bold;
+    font-size: 1rem;
+}
+
+.revform input:required {
+    border-bottom: solid 8px red;
+}
+
+.revform input:required:valid {
+    border-bottom: solid 8px green;
+}
