@@ -49,7 +49,7 @@ h1 {
 .star-option label {
   order: -1;
   font-size: 1.5rem;
-  color: #ccc;
+  color: var(--text-dark);
   cursor: pointer;
   transition: color 0.3s ease;
 }
