@@ -1,0 +1,105 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="description" content="Learn more about Emmanuel Ndogo, a passionate web developer. Get in touch via the contact form – I'd love to hear about your project!">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Libre+Baskerville:ital,wght@0,400..700;1,400..700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="styles/devhub-large.css">
+    <link rel="stylesheet" href="styles/devhub-small.css">
+    <link rel="stylesheet" href="styles/devhub.css">
+    <script src="scripts/devhub.js" defer></script>
+    
+    <title>About & Contact – Emmanuel Ndogo – Tech-hub</title>
+</head>
+<body>
+  <div id="successMessage" class="success-message">
+      <div class="success-icon">&#10003;</div>
+      <div class="success-text">
+          <strong>Success!</strong> Your message has been sent successfully.
+      </div>
+      <button class="close-success" id="closeSuccess">&times;</button>
+  </div>
+    
+  <header>
+    <a href="devhub.html">
+      <img src="images/lmalay's-logo.webp" class="lmalay-logo" alt="Lmalay's Logo for Devhub">
+    </a>
+    <nav>
+      <ul>
+        <li><a href="devhub.html">Home</a></li>
+        <li><a href="articles.html">Articles</a></li>
+        <li><a href="about.html" class="active">About</a></li>
+      </ul>
+    </nav>
+  </header>
+
+  <main>
+    <section class="bio-container">
+      <h1 class="about">About me</h1>
+      
+      <div class="image-section">
+          <img src="images/emmanuel.webp" alt="Emma image">
+      </div>
+
+      <div class="text-section">
+          <span>
+              I am Emmanuel Ndogo, a web developer and aspiring back-end developer with a passion for creating innovative solutions using the latest technologies. I have a strong background in web design and have experience working with various programming languages and frameworks.
+          </span>
+
+      </div>
+      
+      <div class="clearfix">
+          <h2>Emmanuel Ndogo</h2>
+          
+          <span class="job-title">Web Developer & Web designer</span>
+          
+          <span class="bio-text">
+              I am a professional at job and still <span class="highlight">a student with lot of experience</span> in front-end  and creating best users experience. Skilled in problem-solving, agile methodologies, collaboration with stakeholders, and building innovative solutions that provide seamless digital experiences.
+          </span>
+          
+          <span class="bio-text">
+              My background combines <span class="highlight">HTML, CSS, C#, and a passion for coding</span>. Experienced in debugging code, collaborating with classmates on team activities, and turning boring requirements into something actually enjoyable—like building Lmalay's Info Tech Gossip as a school project. I have worked on small weekly activities, medium-sized team designs, and final projects that somehow always get finished the day before they're due.
+          </span>
+      </div>
+      
+      <div class="contact-info">
+          <div class="contact-item email">emmanuel.ndogo@example.com</div>
+          <div class="contact-item">+44 7456 123456</div>
+          <div class="contact-item">linkedin.com/in/emmanuel-ndogo</div>
+      </div>
+    </section>
+
+    <section class="form-submit">
+      <h2>Get in touch with me</h2>
+      <form method="post" id="contactForm" class="contact-form">
+          <fieldset>
+              <legend>Your Information</legend>
+              <label for="userName" class="s-label">Username <span class="required">*</span></label>
+              <input type="text" name="userName" id="userName" placeholder="Enter your username" required>
+              
+              <label for="userEmail" class="s-label" style="margin-top: 15px;">Email Address <span class="required">*</span></label>
+              <input type="email" name="userEmail" id="userEmail" placeholder="Enter your email" required>
+          </fieldset>
+
+          <fieldset>
+              <legend>Your Message</legend>
+              <label for="userMessage" class="s-label">Message <span class="required">*</span></label>
+              <textarea name="userMessage" id="userMessage" placeholder="Write your message here..." required></textarea>
+          </fieldset>
+
+          <button type="submit" class="submitBtn">Send Message</button>
+      </form>
+
+    </section>
+
+  </main>
+
+  <footer>
+    <p><a class="link-a" href="reference.html" target="_blank" >References page→</a></p>
+    <p>&copy; 2025 Emmanuel Ndogo — Tech‑hub | WDD131</p>
+  </footer>
+
+</body>
+</html>

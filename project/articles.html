@@ -1,0 +1,63 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="description" content="Explore all articles on Tech-hub. Browse tutorials, projects, and tech insights with live search, favorites, and dynamic updates. Stay informed with the latest developer resources and news." />
+    <link rel="stylesheet" href="styles/devhub-large.css">
+    <link rel="stylesheet" href="styles/devhub-small.css">
+    <script src="scripts/articles.js" defer></script>
+    <title>Emmanuel Ndogo - Tech-hub</title>
+</head>
+<body>
+    
+  <header>
+    <a href="devhub.html">
+    <img src="images/lmalay's-logo.webp" class="lmalay-logo" alt="Lmalay's Logo for Devhub">
+    </a>
+    <nav>
+      <ul>
+        <li><a href="devhub.html">Home</a></li>
+        <li><a href="articles.html" class="active">Articles</a></li>
+        <li><a href="about.html">About</a></li>
+      </ul>
+    </nav>
+
+
+    <form class="search-form" role="search" onsubmit="return false;">
+      <input 
+          type="search" 
+          id="search-input"
+          placeholder="Search articles..." 
+          class="search-input" 
+          aria-label="Search articles"
+          autocomplete="off">
+      <button type="button" id="clear-search" class="clear-btn" aria-label="Clear search">✕</button>
+      <button type="button" id="search-btn" class="search-button" aria-label="Search">
+          <svg class="search-icon" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z" />
+          </svg>
+      </button>
+    </form>
+
+  </header>
+
+  <main>
+    <section id="filters" class="show-fav-btn">
+      <h3 class="articles-head">Articles</h3>
+      <button id="toggle-favs" class="favorite-btn">Show Favorites Only -<span id="fav-count">0</span>
+      </button>
+    </section>
+  </main>
+
+    <section id="articles-container" class="articles-parent">
+      <h1 class="articles-header">Tech Gossips</h1>
+    </section>
+
+  <footer>
+    <p><a class="link-a" href="reference.html" target="_blank" >References page→</a></p>
+    <p>&copy; 2025 Emmanuel Ndogo — Tech‑hub | WDD131</p>
+  </footer>
+
+</body>
+</html>

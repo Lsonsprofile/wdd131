@@ -3,37 +3,76 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="description" content="Techhub home contains — a Tech News featuring the latest articles, projects, tutorials, and developer resources. Stay updated with trending tools and insights." />
+    <meta name="keywords" content="Tech-hub — Discover web development tutorials, JavaScript projects, CSS design tips, and tech news. Browse latest articles dynamically and access references for young developers.">
+    <link rel="stylesheet" href="styles/devhub-large.css">
+    <link rel="stylesheet" href="styles/devhub-small.css">
     <link rel="stylesheet" href="styles/devhub.css">
-    <title>Emmanuel Ndogo - wdd131</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Libre+Baskerville:ital,wght@0,400..700;1,400..700&display=swap" rel="stylesheet">
+    <script src="scripts/articles.js" defer></script>
+    <title>Emmanuel Ndogo - Tech-hub</title>
 </head>
 <body>
     
   <header>
-    <p>Header Content</p>
+    <a href="devhub.html">
+    <img src="images/lmalay's-logo.webp" class="lmalay-logo" alt="Lmalay's Logo for Devhub">
+    </a>
     <nav>
       <ul>
-        <li><a href="#">Home</a></li>
-        <li><a href="#">Project</a></li>
-        <li><a href="#">Service</a></li>
-        <li><a href="#">Contact Us</a></li>
+        <li><a href="devhub.html" class="active">Home</a></li>
+        <li><a href="articles.html">Articles</a></li>
+        <li><a href="about.html">About</a></li>
       </ul>
     </nav>
   </header>
 
-  <main>
-    <section class="section-main">
-      <h2>Main Section</h2>
-      <p>section main</p>
+  <main class="grid-main">
+    
+    <section class="section-main" id="hero-article">
     </section>
 
-    <aside>
-      <h2>Sidebar</h2>
-      <p>Aside Content</p>
+    <aside class="grid-aside">
+      <h2>SIDEBAR</h2>
+      <p>FOLLOW US @</p>
+      <ul class="social-links">
+        <li><a href="https://www.facebook.com" target="_blank">
+          <i class="fab fa-facebook"></i> Facebook
+        </a></li>
+        <li><a href="https://www.instagram.com" target="_blank">
+          <i class="fab fa-instagram"></i> Instagram
+        </a></li>
+        <li><a href="https://twitter.com" target="_blank">
+          <i class="fab fa-twitter"></i> Twitter
+        </a></li>
+        <li><a href="https://www.youtube.com" target="_blank">
+          <i class="fab fa-youtube"></i> YouTube
+        </a></li>
+      </ul>
     </aside>
+
+    <div class = "grid-storys">
+
+    <section class="section-main" id="spotlight-article">
+    </section>
+    <section class="section-main" id="showcase-article">
+    </section>
+  
+  </div>
+
+    
   </main>
 
+  
+
+
+
   <footer>
-    <p>Footer Content</p>
+    <p><a class="link-a" href="reference.html" target="_blank" >References page→</a></p>
+    <p>&copy; 2025 Emmanuel Ndogo — Tech‑hub | WDD131</p>
   </footer>
 
 </body>
