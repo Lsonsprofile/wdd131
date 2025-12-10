@@ -1142,7 +1142,7 @@ document.addEventListener("DOMContentLoaded", () => {
 
       showcaseBox.innerHTML = `
         <h1 class="banner-heading">GOSSIP</h1>
-        <article class="feature-block">
+        <article class="highlight-block">
           <div class="showcase-image-container">
             <img src="${showcaseItem.image}" 
                  alt="${showcaseItem.title}" 

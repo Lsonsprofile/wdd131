@@ -29,7 +29,7 @@
 }
 
 .hero-card {
-    margin-bottom: 2rem;
+    margin: 2rem ;
 }
 
 .hero-title {
@@ -97,8 +97,9 @@
 
 .section-lead,
 .banner-heading,
-.feature-block, .highlight-block {
+.highlight-block {
     padding: 0.5rem;
+    justify-content: space-between;
 }
 
 .highlight-block {
