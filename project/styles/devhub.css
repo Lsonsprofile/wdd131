@@ -97,12 +97,13 @@
 
 .section-lead,
 .banner-heading,
-.feature-block {
+.feature-block, .highlight-block {
     padding: 0.5rem;
 }
 
 .highlight-block {
     margin: 0.5rem;
+    align-items: stretch;
 }
 
 .social-links {
