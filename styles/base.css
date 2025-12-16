@@ -42,7 +42,7 @@ main {
     grid-column: 1/4;
     grid-template-columns: 3fr 2fr;
     gap:1rem;
-    padding:1.5rem;
+    padding:1.0rem;
     margin:0 auto;
     max-width: 90%;
     background-color: var(--light-background-color);
