@@ -1177,11 +1177,13 @@ document.addEventListener("DOMContentLoaded", () => {
   };
 
   // 7. Create article card function
-  const createArticleCard = (article) => {
+   const createArticleCard = (article) => {
     const card = document.createElement("article");
     card.className = "article-card";
-
-    const isFavorited = getFavorites().includes(article.title);
+    
+    // FIX: Get fresh favorites EVERY TIME we create a card
+    const currentFavorites = getFavorites();
+    const isFavorited = currentFavorites.includes(article.title);
     
     card.innerHTML = `
       <img src="${article.image}" alt="${article.title}" loading="lazy" class="article-img">
@@ -1206,7 +1208,8 @@ document.addEventListener("DOMContentLoaded", () => {
     `;
 
     // Add favorite button event listener
-    card.querySelector(".favorite-btn").addEventListener("click", (e) => {
+    const favBtn = card.querySelector(".favorite-btn");
+    favBtn.addEventListener("click", (e) => {
       e.stopPropagation();
       const btn = e.currentTarget;
       const title = btn.dataset.title;
@@ -1214,6 +1217,7 @@ document.addEventListener("DOMContentLoaded", () => {
       const wasFavorited = btn.classList.contains("favorited");
       const nowFavorited = toggleFavorite(title);
 
+      // FIX: Update the button appearance immediately
       btn.classList.toggle("favorited", nowFavorited);
 
       if (nowFavorited && !wasFavorited) {
@@ -1222,6 +1226,7 @@ document.addEventListener("DOMContentLoaded", () => {
         showToast(`"${title}" removed from favorites`);
       }
 
+      // FIX: Dispatch event to update UI
       document.dispatchEvent(new Event("favoritesUpdated"));
     });
 
@@ -1242,15 +1247,16 @@ document.addEventListener("DOMContentLoaded", () => {
       top: 40%;
       left: 50%;
       transform: translateX(-50%);
-      background: #047408ff;
-      color: white;
+      background: #01000cc9;
+      color: #ced7daff;
       padding: 10px 20px;
-      font-size: 1rem;
-      font-weight: 600;
+      font-size: 1.2rem;
+      font-weight: 400;
       z-index: 100000;
       opacity: 0;
       transition: all 0.4s ease;
       pointer-events: none;
+      border-radius: 5px;
     `;
 
     document.body.appendChild(toast);
@@ -1327,38 +1333,56 @@ document.addEventListener("DOMContentLoaded", () => {
   });
 
   // 12. Favorites toggle button
-  const toggleBtn = document.getElementById("toggle-favs");
-  const favCount = document.getElementById("fav-count");
+  // FIXED: Favorites toggle button
+const toggleBtn = document.getElementById("toggle-favs");
+const favCount = document.getElementById("fav-count");
 
-  if (toggleBtn) {
-    const updateCount = () => {
-      const count = getFavorites().length;
-      if (favCount) favCount.textContent = count;
-      if (toggleBtn) toggleBtn.disabled = count === 0;
-      
-      // Update button text
-      if (toggleBtn.textContent.includes("Show Favorites Only")) {
-        toggleBtn.textContent = `Show Favorites Only (${count})`;
-      }
-    };
+let showingFavorites = false;
 
-    toggleBtn.addEventListener("click", () => {
-      if (toggleBtn.textContent.includes("Show Favorites Only")) {
-        const favs = articles.filter(a => getFavorites().includes(a.title));
-        displayArticles(favs.length ? favs : []);
-        toggleBtn.textContent = "← Back to All Articles";
-      } else {
-        displayArticles();
-        toggleBtn.textContent = `Show Favorites Only (${getFavorites().length})`;
-      }
-      updateCount();
-    });
+if (toggleBtn) {
+  const updateFavoritesButton = () => {
+    const count = getFavorites().length;
+    if (favCount) favCount.textContent = count;
+    
+    // Don't disable button - let users click to see "no favorites" message
+    // toggleBtn.disabled = count === 0; // REMOVE THIS LINE
+    
+    if (!showingFavorites) {
+      toggleBtn.textContent = `Show Favorites Only (${count})`;
+    }
+  };
 
-    // Initial update
-    updateCount();
-    // Listen for favorites updates
-    document.addEventListener("favoritesUpdated", updateCount);
-  }
+  toggleBtn.addEventListener("click", () => {
+    if (showingFavorites) {
+      // Show all articles (ALWAYS works)
+      displayArticles();
+      toggleBtn.textContent = `Show Favorites Only (${getFavorites().length})`;
+      showingFavorites = false;
+    } else {
+      // Show favorites (even if empty array)
+      const favs = articles.filter(a => getFavorites().includes(a.title));
+      displayArticles(favs);
+      toggleBtn.textContent = "← Back to All Articles";
+      showingFavorites = true;
+    }
+    
+    updateFavoritesButton();
+  });
+
+  // Initial update
+  updateFavoritesButton();
+  
+  // Listen for favorites updates
+  document.addEventListener("favoritesUpdated", () => {
+    updateFavoritesButton();
+    
+    // If we're in favorites view, refresh the display
+    if (showingFavorites) {
+      const favs = articles.filter(a => getFavorites().includes(a.title));
+      displayArticles(favs);
+    }
+  });
+}
 
   // 13. Search functionality
   const searchInput = document.getElementById("search-input");
