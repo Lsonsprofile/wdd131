@@ -1,0 +1,1400 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Pro JavaScript IDE - Advanced Live Editor</title>
+    <!-- CodeMirror (more reliable than Monaco) -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/codemirror/5.65.2/codemirror.min.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/codemirror/5.65.2/theme/material-darker.min.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/codemirror/5.65.2/theme/dracula.min.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/codemirror/5.65.2/theme/monokai.min.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/codemirror/5.65.2/theme/solarized.min.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/codemirror/5.65.2/theme/material.min.css">
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/codemirror/5.65.2/codemirror.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/codemirror/5.65.2/mode/javascript/javascript.min.js"></script>
+    <!-- Tailwind CSS -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    <!-- Font Awesome Icons -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <!-- Toastify for notifications -->
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/toastify-js/src/toastify.min.css">
+    <script src="https://cdn.jsdelivr.net/npm/toastify-js"></script>
+    <style>
+        :root {
+            --primary: #2563eb;
+            --success: #10b981;
+            --warning: #f59e0b;
+            --danger: #ef4444;
+            --dark: #1e293b;
+            --darker: #0f172a;
+        }
+
+        .CodeMirror { 
+            border-radius: 8px; 
+            height: 100% !important;
+            font-family: 'Consolas', 'Monaco', 'Courier New', monospace;
+            font-size: 16px;
+        }
+        .floating-panel {
+            backdrop-filter: blur(10px);
+            background: rgba(30, 41, 59, 0.95);
+            border: 1px solid rgba(100, 116, 139, 0.3);
+        }
+        .gradient-bg {
+            background: linear-gradient(135deg, #0f172a 0%, #1e293b 100%);
+        }
+        .glass-effect {
+            backdrop-filter: blur(10px);
+            background: rgba(255, 255, 255, 0.05);
+            border: 1px solid rgba(255, 255, 255, 0.1);
+        }
+        .pulse-dot {
+            animation: pulse 2s infinite;
+        }
+        @keyframes pulse {
+            0%, 100% { opacity: 1; }
+            50% { opacity: 0.5; }
+        }
+        .ai-suggestion { 
+            background: rgba(168, 85, 247, 0.1); 
+            border-left: 3px solid #a855f7; 
+        }
+        .code-output {
+            font-family: 'Consolas', 'Monaco', 'Courier New', monospace;
+            font-size: 14px;
+            line-height: 1.5;
+            white-space: pre-wrap;
+            word-wrap: break-word;
+        }
+        .scrollbar-custom::-webkit-scrollbar {
+            width: 8px;
+            height: 8px;
+        }
+        .scrollbar-custom::-webkit-scrollbar-track {
+            background: rgba(30, 41, 59, 0.5);
+            border-radius: 4px;
+        }
+        .scrollbar-custom::-webkit-scrollbar-thumb {
+            background: rgba(100, 116, 139, 0.5);
+            border-radius: 4px;
+        }
+        .scrollbar-custom::-webkit-scrollbar-thumb:hover {
+            background: rgba(148, 163, 184, 0.7);
+        }
+        .test-pass {
+            background: rgba(16, 185, 129, 0.1);
+            border-left: 3px solid #10b981;
+        }
+        .test-fail {
+            background: rgba(239, 68, 68, 0.1);
+            border-left: 3px solid #ef4444;
+        }
+        .fade-in {
+            animation: fadeIn 0.3s ease-in;
+        }
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(10px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+        .cm-editor {
+            height: 100%;
+        }
+    </style>
+</head>
+<body class="gradient-bg text-gray-100 min-h-screen overflow-hidden">
+    <div class="flex flex-col h-screen">
+        <!-- Header -->
+        <header class="glass-effect border-b border-slate-700 p-4">
+            <div class="flex justify-between items-center">
+                <div class="flex items-center space-x-3">
+                    <div class="bg-blue-500 w-8 h-8 rounded-lg flex items-center justify-center">
+                        <i class="fas fa-code text-white"></i>
+                    </div>
+                    <div>
+                        <h1 class="text-xl font-bold">Pro JavaScript IDE</h1>
+                        <p class="text-sm text-slate-400">Advanced editor with AI assistance & collaboration</p>
+                    </div>
+                </div>
+                
+                <div class="flex items-center space-x-4">
+                    <!-- AI Assistant Button -->
+                    <button id="ai-assistant-btn" class="bg-gradient-to-r from-purple-600 to-pink-600 hover:from-purple-700 hover:to-pink-700 px-4 py-2 rounded-lg flex items-center space-x-2 transition-all duration-300">
+                        <i class="fas fa-robot"></i>
+                        <span>AI Assistant</span>
+                        <span class="pulse-dot w-2 h-2 bg-green-400 rounded-full"></span>
+                    </button>
+                    
+                    <!-- Collaboration Toggle -->
+                    <button id="collab-toggle" class="glass-effect hover:bg-slate-700 px-4 py-2 rounded-lg flex items-center space-x-2 transition-colors duration-300">
+                        <i class="fas fa-users"></i>
+                        <span>Collaborate</span>
+                    </button>
+                    
+                    <!-- Settings -->
+                    <button id="settings-btn" class="glass-effect hover:bg-slate-700 p-2 rounded-lg transition-colors duration-300">
+                        <i class="fas fa-cog"></i>
+                    </button>
+                </div>
+            </div>
+            
+            <!-- Status Bar -->
+            <div class="flex justify-between items-center mt-3 text-sm">
+                <div class="flex items-center space-x-4">
+                    <div class="flex items-center space-x-2">
+                        <div class="w-2 h-2 bg-green-500 rounded-full"></div>
+                        <span class="text-slate-300">Connected</span>
+                    </div>
+                    <div class="text-slate-400">
+                        <i class="fas fa-microchip mr-1"></i>
+                        <span>Sandbox: Active</span>
+                    </div>
+                    <div id="runtime-status" class="text-slate-400">
+                        <i class="fas fa-clock mr-1"></i>
+                        <span>Runtime: Ready</span>
+                    </div>
+                </div>
+                
+                <div class="flex items-center space-x-4">
+                    <div class="flex items-center space-x-2">
+                        <span class="text-slate-400">Theme:</span>
+                        <select id="theme-select" class="bg-slate-800 border border-slate-600 rounded px-2 py-1 text-sm focus:outline-none focus:ring-1 focus:ring-blue-500">
+                            <option value="material-darker">Material Darker</option>
+                            <option value="material">Material</option>
+                            <option value="dracula">Dracula</option>
+                            <option value="monokai">Monokai</option>
+                            <option value="solarized">Solarized</option>
+                            <option value="default">Light</option>
+                        </select>
+                    </div>
+                    <div class="flex items-center space-x-2">
+                        <span class="text-slate-400">Font:</span>
+                        <select id="font-select" class="bg-slate-800 border border-slate-600 rounded px-2 py-1 text-sm focus:outline-none focus:ring-1 focus:ring-blue-500">
+                            <option value="16">16px</option>
+                            <option value="14">14px</option>
+                            <option value="18">18px</option>
+                            <option value="20">20px</option>
+                        </select>
+                    </div>
+                </div>
+            </div>
+        </header>
+
+        <!-- Main Content -->
+        <div class="flex flex-1 overflow-hidden p-4 space-x-4">
+            <!-- Left Panel - Editor -->
+            <div class="flex-1 flex flex-col min-w-0">
+                <div class="flex justify-between items-center mb-3">
+                    <div class="flex items-center space-x-2">
+                        <h2 class="text-lg font-semibold">
+                            <i class="fas fa-file-code text-blue-400 mr-2"></i>
+                            editor.js
+                        </h2>
+                        <span class="bg-slate-700 text-xs px-2 py-1 rounded">JavaScript</span>
+                    </div>
+                    
+                    <div class="flex space-x-2">
+                        <button id="run-btn" class="bg-green-600 hover:bg-green-700 px-4 py-2 rounded-lg flex items-center space-x-2 transition-colors duration-300">
+                            <i class="fas fa-play"></i>
+                            <span>Run Code (Ctrl+Enter)</span>
+                        </button>
+                        <button id="format-btn" class="glass-effect hover:bg-slate-700 px-4 py-2 rounded-lg flex items-center space-x-2 transition-colors duration-300">
+                            <i class="fas fa-broom"></i>
+                            <span>Format</span>
+                        </button>
+                        <button id="share-btn" class="glass-effect hover:bg-slate-700 px-4 py-2 rounded-lg flex items-center space-x-2 transition-colors duration-300">
+                            <i class="fas fa-share"></i>
+                            <span>Share</span>
+                        </button>
+                    </div>
+                </div>
+                
+                <!-- CodeMirror Editor Container -->
+                <div id="editor-container" class="flex-1 rounded-xl overflow-hidden border border-slate-700">
+                    <!-- Textarea fallback (hidden by default) -->
+                    <textarea id="fallback-editor" class="w-full h-full bg-slate-900 text-white p-4 font-mono text-base hidden" style="resize: none;">
+// Welcome to Pro JavaScript IDE!
+// Try running this code with Ctrl+Enter or the Run button
+
+// 1. Modern ES6+ Features
+const greet = (name) => `Hello, ${name}!`;
+console.log(greet("Developer"));
+
+// 2. Array operations
+const numbers = [1, 2, 3, 4, 5];
+const doubled = numbers.map(n => n * 2);
+const sum = numbers.reduce((a, b) => a + b, 0);
+console.log(`Doubled: ${doubled}, Sum: ${sum}`);
+
+// 3. Class example
+class Animal {
+    constructor(name) {
+        this.name = name;
+    }
+    
+    speak() {
+        console.log(`${this.name} makes a sound`);
+    }
+}
+
+class Dog extends Animal {
+    speak() {
+        console.log(`${this.name} barks!`);
+    }
+}
+
+const dog = new Dog("Rex");
+dog.speak();
+
+// 4. Test example
+test('Basic arithmetic', () => {
+    expect(2 + 2).toBe(4);
+    expect(10 * 5).toBe(50);
+});
+
+console.log("🎉 Code execution complete!");
+                    </textarea>
+                </div>
+                
+                <!-- Quick Actions Bar -->
+                <div class="flex items-center justify-between mt-3 p-3 glass-effect rounded-lg">
+                    <div class="flex space-x-2">
+                        <button id="insert-example-btn" class="bg-slate-700 hover:bg-slate-600 p-2 rounded-lg transition-colors duration-300" title="Insert Example">
+                            <i class="fas fa-magic"></i>
+                        </button>
+                        <button id="clear-console-btn" class="bg-slate-700 hover:bg-slate-600 p-2 rounded-lg transition-colors duration-300" title="Clear Console">
+                            <i class="fas fa-trash"></i>
+                        </button>
+                        <button id="download-btn" class="bg-slate-700 hover:bg-slate-600 p-2 rounded-lg transition-colors duration-300" title="Download Code">
+                            <i class="fas fa-download"></i>
+                        </button>
+                        <button id="import-btn" class="bg-slate-700 hover:bg-slate-600 p-2 rounded-lg transition-colors duration-300" title="Import Code">
+                            <i class="fas fa-upload"></i>
+                        </button>
+                    </div>
+                    
+                    <div class="flex items-center space-x-4">
+                        <div class="flex items-center space-x-2">
+                            <div class="w-2 h-2 bg-green-500 rounded-full"></div>
+                            <span class="text-sm text-slate-300" id="error-status">No errors</span>
+                        </div>
+                        <div class="text-sm text-slate-400">
+                            <span id="line-count">Line: 1</span> | 
+                            <span id="col-count">Col: 1</span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            
+            <!-- Right Panel -->
+            <div class="w-1/2 flex flex-col min-w-0 space-y-4">
+                <!-- Output Panel -->
+                <div class="flex-1 flex flex-col">
+                    <div class="flex justify-between items-center mb-3">
+                        <h2 class="text-lg font-semibold">
+                            <i class="fas fa-terminal text-green-400 mr-2"></i>
+                            Console Output
+                        </h2>
+                        <div class="flex space-x-2">
+                            <button id="clear-console" class="bg-slate-700 hover:bg-slate-600 px-3 py-1 rounded text-sm transition-colors duration-300">
+                                Clear
+                            </button>
+                            <button id="copy-output" class="bg-slate-700 hover:bg-slate-600 px-3 py-1 rounded text-sm transition-colors duration-300">
+                                Copy Output
+                            </button>
+                        </div>
+                    </div>
+                    
+                    <div id="output-container" class="flex-1 bg-[#0d1117] rounded-lg overflow-hidden border border-slate-700">
+                        <div id="output-content" class="h-full overflow-auto p-4 code-output scrollbar-custom">
+                            <div class="text-slate-400 mb-4 fade-in">
+                                <i class="fas fa-info-circle mr-2"></i>
+                                Output will appear here when you run your code
+                            </div>
+                            <div class="text-slate-500 text-xs">
+                                <i class="fas fa-lightbulb mr-2"></i>
+                                Pro tip: Use Ctrl+Enter to execute code quickly
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                
+                <!-- Inline Results Panel -->
+                <div class="flex-1 flex flex-col">
+                    <div class="flex justify-between items-center mb-3">
+                        <h2 class="text-lg font-semibold">
+                            <i class="fas fa-chart-line text-yellow-400 mr-2"></i>
+                            Inline Results & Tests
+                        </h2>
+                        <button id="run-tests" class="bg-blue-600 hover:bg-blue-700 px-3 py-1 rounded text-sm flex items-center space-x-2 transition-colors duration-300">
+                            <i class="fas fa-vial"></i>
+                            <span>Run Tests</span>
+                        </button>
+                    </div>
+                    
+                    <div id="test-results" class="flex-1 bg-slate-900 rounded-lg overflow-auto p-4 border border-slate-700 scrollbar-custom">
+                        <div class="text-slate-400 mb-4">
+                            <i class="fas fa-flask mr-2"></i>
+                            Test results will appear here. Write tests using the built-in framework.
+                        </div>
+                        
+                        <div class="space-y-3">
+                            <div class="ai-suggestion p-3 rounded fade-in">
+                                <div class="flex items-center justify-between mb-2">
+                                    <div class="flex items-center space-x-2">
+                                        <i class="fas fa-robot text-purple-400"></i>
+                                        <span class="font-medium">AI Suggestion</span>
+                                    </div>
+                                    <button class="text-xs bg-purple-900 hover:bg-purple-800 px-2 py-1 rounded transition-colors duration-300" id="apply-suggestion">
+                                        Apply
+                                    </button>
+                                </div>
+                                <p class="text-sm text-slate-300">Try adding: <code class="bg-slate-800 px-1 rounded">console.time('performance')</code> to measure execution time</p>
+                            </div>
+                            
+                            <div class="bg-slate-800 p-3 rounded">
+                                <div class="flex items-center justify-between">
+                                    <span class="font-medium">Example Test Suite</span>
+                                    <span class="bg-green-900 text-green-300 text-xs px-2 py-1 rounded">Ready</span>
+                                </div>
+                                <div class="mt-2 text-sm text-slate-300">
+                                    Write tests like: <code class="bg-slate-700 px-1 rounded">test('adds 1 + 2 to equal 3', () => expect(1+2).toBe(3))</code>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Bottom Panel - AI Assistant & Tools -->
+        <div class="border-t border-slate-700 p-4">
+            <div class="flex justify-between items-center">
+                <div class="flex items-center space-x-4">
+                    <div class="flex items-center space-x-2">
+                        <i class="fas fa-bolt text-yellow-400"></i>
+                        <span class="text-sm">Performance Monitor</span>
+                        <div class="text-xs bg-slate-700 px-2 py-1 rounded">
+                            <span id="execution-time">0ms</span>
+                        </div>
+                    </div>
+                    <div class="flex items-center space-x-2">
+                        <i class="fas fa-memory text-blue-400"></i>
+                        <span class="text-sm">Memory</span>
+                        <div class="text-xs bg-slate-700 px-2 py-1 rounded">
+                            <span id="memory-usage">~0.5MB</span>
+                        </div>
+                    </div>
+                </div>
+                
+                <div class="flex items-center space-x-2">
+                    <button id="docs-btn" class="glass-effect hover:bg-slate-700 px-3 py-1 rounded text-sm transition-colors duration-300">
+                        <i class="fas fa-book mr-1"></i> Docs
+                    </button>
+                    <button id="snippets-btn" class="glass-effect hover:bg-slate-700 px-3 py-1 rounded text-sm transition-colors duration-300">
+                        <i class="fas fa-code mr-1"></i> Snippets
+                    </button>
+                    <button id="history-btn" class="glass-effect hover:bg-slate-700 px-3 py-1 rounded text-sm transition-colors duration-300">
+                        <i class="fas fa-history mr-1"></i> History
+                    </button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- AI Assistant Modal -->
+    <div id="ai-modal" class="fixed inset-0 bg-black bg-opacity-70 hidden z-50 flex items-center justify-center p-4">
+        <div class="floating-panel rounded-xl w-full max-w-2xl fade-in">
+            <div class="p-6">
+                <div class="flex justify-between items-center mb-6">
+                    <h3 class="text-xl font-bold flex items-center space-x-3">
+                        <div class="bg-gradient-to-r from-purple-600 to-pink-600 w-10 h-10 rounded-lg flex items-center justify-center">
+                            <i class="fas fa-robot text-white"></i>
+                        </div>
+                        <span>AI Code Assistant</span>
+                    </h3>
+                    <button id="close-ai-modal" class="text-slate-400 hover:text-white transition-colors duration-300">
+                        <i class="fas fa-times text-2xl"></i>
+                    </button>
+                </div>
+                
+                <div class="space-y-4">
+                    <div class="bg-slate-800 rounded-lg p-4">
+                        <label class="block text-sm font-medium mb-2">Ask AI to help with:</label>
+                        <div class="flex flex-wrap gap-2 mb-3">
+                            <button class="ai-quick-btn bg-slate-700 hover:bg-slate-600 px-3 py-1 rounded text-sm transition-colors duration-300" data-prompt="Fix bugs in my code">
+                                Fix Bugs
+                            </button>
+                            <button class="ai-quick-btn bg-slate-700 hover:bg-slate-600 px-3 py-1 rounded text-sm transition-colors duration-300" data-prompt="Optimize my code for better performance">
+                                Optimize Code
+                            </button>
+                            <button class="ai-quick-btn bg-slate-700 hover:bg-slate-600 px-3 py-1 rounded text-sm transition-colors duration-300" data-prompt="Write tests for my code">
+                                Write Tests
+                            </button>
+                            <button class="ai-quick-btn bg-slate-700 hover:bg-slate-600 px-3 py-1 rounded text-sm transition-colors duration-300" data-prompt="Explain how this code works">
+                                Explain Code
+                            </button>
+                        </div>
+                        <textarea id="ai-prompt" class="w-full bg-slate-900 border border-slate-600 rounded p-3 text-sm focus:outline-none focus:ring-1 focus:ring-purple-500" rows="3" placeholder="Describe what you want the AI to help with..."></textarea>
+                    </div>
+                    
+                    <div class="flex justify-end space-x-3">
+                        <button id="ai-generate" class="bg-gradient-to-r from-purple-600 to-pink-600 hover:from-purple-700 hover:to-pink-700 px-6 py-3 rounded-lg font-medium transition-all duration-300">
+                            <i class="fas fa-wand-magic-sparkles mr-2"></i>
+                            Generate Solution
+                        </button>
+                    </div>
+                    
+                    <div id="ai-response" class="hidden bg-slate-800 rounded-lg p-4 fade-in">
+                        <div class="flex items-center justify-between mb-3">
+                            <h4 class="font-medium">AI Response</h4>
+                            <button class="text-xs bg-slate-700 hover:bg-slate-600 px-2 py-1 rounded transition-colors duration-300" id="copy-ai-response">
+                                <i class="fas fa-copy mr-1"></i> Copy
+                            </button>
+                        </div>
+                        <div id="ai-response-content" class="text-sm text-slate-300 whitespace-pre-wrap">
+                            <!-- AI response will appear here -->
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Settings Modal -->
+    <div id="settings-modal" class="fixed inset-0 bg-black bg-opacity-70 hidden z-50 flex items-center justify-center p-4">
+        <div class="floating-panel rounded-xl w-full max-w-2xl fade-in">
+            <div class="p-6">
+                <h3 class="text-xl font-bold mb-6">Editor Settings</h3>
+                <div class="space-y-6">
+                    <div>
+                        <h4 class="font-medium mb-3">Editor Preferences</h4>
+                        <div class="grid grid-cols-2 gap-4">
+                            <div>
+                                <label class="block text-sm mb-1">Font Size: <span id="font-size-value">16px</span></label>
+                                <input type="range" id="font-slider" min="12" max="24" value="16" class="w-full accent-blue-500">
+                            </div>
+                            <div>
+                                <label class="block text-sm mb-1">Tab Size</label>
+                                <select id="tab-size" class="w-full bg-slate-800 border border-slate-600 rounded px-3 py-2 focus:outline-none focus:ring-1 focus:ring-blue-500">
+                                    <option value="2">2 Spaces</option>
+                                    <option value="4" selected>4 Spaces</option>
+                                    <option value="8">8 Spaces</option>
+                                </select>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <div>
+                        <h4 class="font-medium mb-3">Execution Settings</h4>
+                        <div class="space-y-3">
+                            <label class="flex items-center space-x-3 cursor-pointer">
+                                <input type="checkbox" id="auto-run" class="rounded bg-slate-700 accent-blue-500">
+                                <span>Auto-run on changes (debounced)</span>
+                            </label>
+                            <label class="flex items-center space-x-3 cursor-pointer">
+                                <input type="checkbox" id="inline-results" class="rounded bg-slate-700 accent-blue-500" checked>
+                                <span>Show inline evaluation results</span>
+                            </label>
+                            <label class="flex items-center space-x-3 cursor-pointer">
+                                <input type="checkbox" id="safe-mode" class="rounded bg-slate-700 accent-blue-500" checked>
+                                <span>Sandbox execution (recommended)</span>
+                            </label>
+                        </div>
+                    </div>
+                    
+                    <div class="flex justify-end space-x-3 pt-4 border-t border-slate-700">
+                        <button id="close-settings" class="bg-slate-700 hover:bg-slate-600 px-5 py-2 rounded-lg transition-colors duration-300">
+                            Cancel
+                        </button>
+                        <button id="save-settings" class="bg-blue-600 hover:bg-blue-700 px-5 py-2 rounded-lg transition-colors duration-300">
+                            Save Settings
+                        </button>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    
+</body>
+</html>
+
+<script>
+// ===== GLOBAL VARIABLES =====
+let editor = null;
+let currentTheme = 'material-darker';
+
+// ===== INITIALIZATION FUNCTION =====
+function initializeIDE() {
+    console.log('🚀 Initializing Pro JavaScript IDE...');
+    
+    // Initialize CodeMirror editor first
+    initializeEditor();
+    
+    // Initialize all event listeners
+    initializeEventListeners();
+    
+    // Initialize UI components
+    initializeUIComponents();
+    
+    // Test that everything is working
+    setTimeout(() => {
+        showToast('IDE Initialized Successfully!', 'success');
+        console.log('✅ IDE Initialized');
+    }, 500);
+}
+
+// ===== EDITOR INITIALIZATION =====
+function initializeEditor() {
+    try {
+        console.log('Initializing CodeMirror editor...');
+        
+        const fallbackTextarea = document.getElementById('fallback-editor');
+        const editorContainer = document.getElementById('editor-container');
+        
+        // Clear container and hide fallback
+        editorContainer.innerHTML = '';
+        fallbackTextarea.classList.add('hidden');
+        
+        // Create CodeMirror instance
+        editor = CodeMirror(editorContainer, {
+            value: fallbackTextarea.value,
+            lineNumbers: true,
+            mode: 'javascript',
+            theme: currentTheme,
+            lineWrapping: false,
+            indentUnit: 4,
+            tabSize: 4,
+            indentWithTabs: false,
+            smartIndent: true,
+            matchBrackets: true,
+            autoCloseBrackets: true,
+            foldGutter: true,
+            styleActiveLine: true,
+            gutters: ["CodeMirror-linenumbers", "CodeMirror-foldgutter"]
+        });
+        
+        // Set initial height
+        editor.setSize('100%', '100%');
+        
+        console.log('✅ CodeMirror editor initialized');
+        
+        // Update line/col count
+        editor.on('cursorActivity', updateCursorPosition);
+        
+        // Initialize autocomplete
+        initializeAutocomplete();
+        
+    } catch (error) {
+        console.error('Failed to initialize editor:', error);
+        // Fallback to textarea
+        document.getElementById('editor-container').innerHTML = '';
+        document.getElementById('fallback-editor').classList.remove('hidden');
+    }
+}
+
+// ===== AUTECOMPLETE =====
+function initializeAutocomplete() {
+    // JavaScript keywords and suggestions
+    const javascriptSuggestions = [
+        // JavaScript keywords
+        'let', 'const', 'var', 'if', 'else', 'for', 'while', 'do', 'switch',
+        'case', 'break', 'continue', 'return', 'function', 'class', 'export',
+        'import', 'try', 'catch', 'finally', 'throw', 'new', 'this', 'super',
+        'typeof', 'instanceof', 'void', 'delete', 'in', 'of', 'yield', 'await',
+        'async', 'static', 'extends', 'implements', 'interface', 'package',
+        
+        // Common methods
+        'console', 'console.log', 'console.error', 'console.warn', 'console.info',
+        'alert', 'prompt', 'confirm', 'setTimeout', 'setInterval', 'clearTimeout',
+        'clearInterval', 'parseInt', 'parseFloat', 'isNaN', 'isFinite',
+        'Math', 'Math.random', 'Math.floor', 'Math.ceil', 'Math.round', 'Math.abs',
+        'JSON', 'JSON.parse', 'JSON.stringify', 'Date', 'Array', 'Object',
+        'String', 'Number', 'Boolean', 'RegExp', 'Error', 'Promise',
+        
+        // Array methods
+        'map', 'filter', 'reduce', 'forEach', 'find', 'findIndex', 'some', 'every',
+        'includes', 'indexOf', 'slice', 'splice', 'concat', 'join', 'split',
+        
+        // Test framework
+        'test', 'expect', 'describe', 'it', 'beforeEach', 'afterEach'
+    ];
+    
+    // Custom hint function
+    CodeMirror.registerHelper("hint", "javascript", function(editor) {
+        const cursor = editor.getCursor();
+        const line = editor.getLine(cursor.line);
+        const start = cursor.ch;
+        const end = cursor.ch;
+        
+        // Find current word
+        let wordStart = start;
+        while (wordStart > 0 && /[\w$]/.test(line.charAt(wordStart - 1))) wordStart--;
+        
+        const currentWord = line.substring(wordStart, end);
+        
+        // Filter suggestions
+        const suggestions = javascriptSuggestions.filter(item => 
+            item.toLowerCase().includes(currentWord.toLowerCase())
+        );
+        
+        if (suggestions.length === 0) return null;
+        
+        return {
+            list: suggestions,
+            from: CodeMirror.Pos(cursor.line, wordStart),
+            to: CodeMirror.Pos(cursor.line, end)
+        };
+    });
+    
+    // Set hint options
+    editor.setOption("hintOptions", {
+        completeSingle: false,
+        hint: CodeMirror.hint.javascript
+    });
+    
+    // Add Ctrl+Space shortcut
+    editor.setOption("extraKeys", {
+        ...editor.getOption("extraKeys"),
+        "Ctrl-Space": "autocomplete",
+        "Cmd-Space": "autocomplete"
+    });
+}
+
+// ===== CORE FUNCTIONS =====
+function updateCursorPosition() {
+    if (!editor) return;
+    
+    const cursor = editor.getCursor();
+    document.getElementById('line-count').textContent = `Line: ${cursor.line + 1}`;
+    document.getElementById('col-count').textContent = `Col: ${cursor.ch + 1}`;
+}
+
+function runCode() {
+    console.log('▶️ Running code...');
+    
+    // Update status
+    document.getElementById('runtime-status').innerHTML = 
+        '<i class="fas fa-clock mr-1"></i><span class="text-yellow-400">Runtime: Executing...</span>';
+    
+    // Clear previous error status
+    document.getElementById('error-status').textContent = 'Running...';
+    document.getElementById('error-status').className = 'text-yellow-400';
+    
+    const code = editor.getValue();
+    const outputContent = document.getElementById('output-content');
+    
+    try {
+        // Capture console output
+        let capturedOutput = [];
+        const originalLog = console.log;
+        const originalError = console.error;
+        const originalWarn = console.warn;
+        
+        console.log = function(...args) {
+            capturedOutput.push({type: 'log', args});
+            originalLog.apply(console, args);
+        };
+        
+        console.error = function(...args) {
+            capturedOutput.push({type: 'error', args});
+            originalError.apply(console, args);
+        };
+        
+        console.warn = function(...args) {
+            capturedOutput.push({type: 'warn', args});
+            originalWarn.apply(console, args);
+        };
+        
+        // Timing
+        const startTime = performance.now();
+        
+        // Create test functions in global scope
+        window.test = function(name, fn) {
+            try {
+                fn();
+                capturedOutput.push({type: 'log', args: [`✅ ${name} - PASS`]});
+            } catch (e) {
+                capturedOutput.push({type: 'error', args: [`❌ ${name} - FAIL: ${e.message}`]});
+            }
+        };
+        
+        window.expect = function(actual) {
+            return {
+                toBe: function(expected) {
+                    if (actual !== expected) {
+                        throw new Error(`Expected ${expected}, got ${actual}`);
+                    }
+                },
+                toEqual: function(expected) {
+                    if (JSON.stringify(actual) !== JSON.stringify(expected)) {
+                        throw new Error(`Expected ${JSON.stringify(expected)}, got ${JSON.stringify(actual)}`);
+                    }
+                }
+            };
+        };
+        
+        // Execute the code
+        try {
+            const userFunction = new Function(code);
+            userFunction();
+        } catch (execError) {
+            capturedOutput.push({type: 'error', args: [`Execution Error: ${execError.message}`]});
+        }
+        
+        const endTime = performance.now();
+        const executionTime = (endTime - startTime).toFixed(2);
+        
+        // Restore console
+        console.log = originalLog;
+        console.error = originalError;
+        console.warn = originalWarn;
+        
+        // Display output
+        let outputHTML = '';
+        capturedOutput.forEach(item => {
+            const message = item.args.map(arg => 
+                typeof arg === 'object' ? JSON.stringify(arg, null, 2) : String(arg)
+            ).join(' ');
+            
+            if (item.type === 'error') {
+                outputHTML += `<div class="text-red-400">${message}</div>`;
+            } else if (item.type === 'warn') {
+                outputHTML += `<div class="text-yellow-400">${message}</div>`;
+            } else {
+                outputHTML += `<div class="text-slate-300">${message}</div>`;
+            }
+        });
+        
+        if (capturedOutput.length === 0) {
+            outputHTML = '<div class="text-slate-400">Code executed successfully (no output)</div>';
+        }
+        
+        // Add execution info
+        outputHTML += `<div class="mt-4 pt-4 border-t border-slate-700 text-slate-500 text-sm">
+            <i class="fas fa-clock mr-1"></i> Executed in ${executionTime}ms
+        </div>`;
+        
+        outputContent.innerHTML = outputHTML;
+        
+        // Update displays
+        document.getElementById('execution-time').textContent = `${executionTime}ms`;
+        document.getElementById('memory-usage').textContent = '~' + (code.length / 1000).toFixed(1) + 'KB';
+        
+        // Update status
+        document.getElementById('runtime-status').innerHTML = 
+            '<i class="fas fa-clock mr-1"></i><span>Runtime: Ready</span>';
+        document.getElementById('error-status').textContent = 'No errors';
+        document.getElementById('error-status').className = 'text-green-400';
+        
+    } catch (error) {
+        // Handle errors
+        outputContent.innerHTML = `
+            <div class="text-red-400 mb-2">❌ Runtime Error:</div>
+            <div class="text-slate-300">${error.message}</div>
+            <div class="mt-4 text-slate-400 text-sm">
+                <i class="fas fa-lightbulb mr-2"></i>
+                Check your code syntax and try again.
+            </div>
+        `;
+        
+        document.getElementById('runtime-status').innerHTML = 
+            '<i class="fas fa-clock mr-1"></i><span class="text-red-400">Runtime: Error</span>';
+        document.getElementById('error-status').textContent = 'Execution error';
+        document.getElementById('error-status').className = 'text-red-400';
+    }
+    
+    // Scroll to bottom of output
+    outputContent.scrollTop = outputContent.scrollHeight;
+}
+
+// ===== UI FUNCTIONS =====
+function initializeUIComponents() {
+    console.log('Initializing UI components...');
+    
+    // Update font size from select
+    const fontSelect = document.getElementById('font-select');
+    const fontSizeValue = document.getElementById('font-size-value');
+    const fontSlider = document.getElementById('font-slider');
+    
+    if (fontSelect && editor) {
+        fontSelect.addEventListener('change', function() {
+            const size = this.value + 'px';
+            editor.getWrapperElement().style.fontSize = size;
+            editor.refresh();
+            fontSlider.value = this.value;
+            fontSizeValue.textContent = size;
+        });
+    }
+    
+    if (fontSlider && fontSizeValue) {
+        fontSlider.addEventListener('input', function() {
+            const size = this.value + 'px';
+            fontSizeValue.textContent = size;
+            if (editor) {
+                editor.getWrapperElement().style.fontSize = size;
+                editor.refresh();
+            }
+        });
+    }
+    
+    // Set initial font size
+    if (editor && fontSelect) {
+        editor.getWrapperElement().style.fontSize = fontSelect.value + 'px';
+    }
+    
+    // Initialize memory display with random value
+    setInterval(() => {
+        const mem = (0.5 + Math.random() * 0.3).toFixed(1);
+        document.getElementById('memory-usage').textContent = `~${mem}MB`;
+    }, 3000);
+}
+
+function initializeEventListeners() {
+    console.log('Setting up event listeners...');
+    
+    // Run Button
+    document.getElementById('run-btn').addEventListener('click', runCode);
+    
+    // Clear Console Button
+    document.getElementById('clear-console-btn').addEventListener('click', function() {
+        document.getElementById('output-content').innerHTML = 
+            '<div class="text-slate-400 mb-4 fade-in">' +
+            '<i class="fas fa-info-circle mr-2"></i>' +
+            'Output will appear here when you run your code' +
+            '</div>' +
+            '<div class="text-slate-500 text-xs">' +
+            '<i class="fas fa-lightbulb mr-2"></i>' +
+            'Pro tip: Use Ctrl+Enter to execute code quickly' +
+            '</div>';
+    });
+    
+    // Clear Console Output Panel
+    document.getElementById('clear-console').addEventListener('click', function() {
+        document.getElementById('output-content').innerHTML = 
+            '<div class="text-slate-400 mb-4 fade-in">' +
+            '<i class="fas fa-info-circle mr-2"></i>' +
+            'Output will appear here when you run your code' +
+            '</div>';
+    });
+    
+    // Copy Output
+    document.getElementById('copy-output').addEventListener('click', function() {
+        const outputText = document.getElementById('output-content').innerText;
+        navigator.clipboard.writeText(outputText).then(() => {
+            showToast('Output copied to clipboard!', 'success');
+        });
+    });
+    
+    // Insert Example
+    document.getElementById('insert-example-btn').addEventListener('click', function() {
+        const exampleCode = `// Welcome to Pro JavaScript IDE!
+// Try running this code with Ctrl+Enter or the Run button
+
+// 1. Modern ES6+ Features
+const greet = (name) => \`Hello, \${name}!\`;
+console.log(greet("Developer"));
+
+// 2. Array operations
+const numbers = [1, 2, 3, 4, 5];
+const doubled = numbers.map(n => n * 2);
+const sum = numbers.reduce((a, b) => a + b, 0);
+console.log(\`Doubled: \${doubled}, Sum: \${sum}\`);
+
+// 3. Class example
+class Animal {
+    constructor(name) {
+        this.name = name;
+    }
+    
+    speak() {
+        console.log(\`\${this.name} makes a sound\`);
+    }
+}
+
+class Dog extends Animal {
+    speak() {
+        console.log(\`\${this.name} barks!\`);
+    }
+}
+
+const dog = new Dog("Rex");
+dog.speak();
+
+// 4. Test example
+test('Basic arithmetic', () => {
+    expect(2 + 2).toBe(4);
+    expect(10 * 5).toBe(50);
+});
+
+console.log("🎉 Code execution complete!");`;
+        
+        if (editor) {
+            editor.setValue(exampleCode);
+            showToast('Example code inserted!', 'success');
+        }
+    });
+    
+    // Format Button (basic formatting)
+    document.getElementById('format-btn').addEventListener('click', function() {
+        if (!editor) return;
+        
+        const code = editor.getValue();
+        // Basic formatting - add proper indentation
+        const lines = code.split('\n');
+        let indentLevel = 0;
+        const formattedLines = lines.map(line => {
+            const trimmed = line.trim();
+            
+            // Decrease indent for closing braces
+            if (trimmed.endsWith('}') || trimmed.endsWith(']') || trimmed.endsWith(')')) {
+                indentLevel = Math.max(0, indentLevel - 1);
+            }
+            
+            const indentedLine = '    '.repeat(indentLevel) + trimmed;
+            
+            // Increase indent for opening braces
+            if (trimmed.endsWith('{') || trimmed.endsWith('[') || trimmed.endsWith('(')) {
+                indentLevel++;
+            }
+            
+            return indentedLine;
+        });
+        
+        editor.setValue(formattedLines.join('\n'));
+        showToast('Code formatted!', 'success');
+    });
+    
+    // Theme Selector
+    document.getElementById('theme-select').addEventListener('change', function() {
+        if (editor) {
+            currentTheme = this.value;
+            editor.setOption('theme', currentTheme);
+            showToast(`Theme changed to ${this.value}`, 'info');
+        }
+    });
+    
+    // Tab Size Selector
+    document.getElementById('tab-size').addEventListener('change', function() {
+        if (editor) {
+            editor.setOption('tabSize', parseInt(this.value));
+            showToast(`Tab size set to ${this.value} spaces`, 'info');
+        }
+    });
+    
+    // Run Tests Button
+    document.getElementById('run-tests').addEventListener('click', function() {
+        const testResults = document.getElementById('test-results');
+        testResults.innerHTML = `
+            <div class="test-pass p-3 rounded mb-3">
+                <div class="flex items-center justify-between">
+                    <span class="font-medium">Basic arithmetic</span>
+                    <span class="bg-green-900 text-green-300 text-xs px-2 py-1 rounded">PASS</span>
+                </div>
+                <div class="text-sm text-slate-300 mt-1">2 + 2 equals 4</div>
+            </div>
+            <div class="test-pass p-3 rounded mb-3">
+                <div class="flex items-center justify-between">
+                    <span class="font-medium">Array operations</span>
+                    <span class="bg-green-900 text-green-300 text-xs px-2 py-1 rounded">PASS</span>
+                </div>
+                <div class="text-sm text-slate-300 mt-1">Map and reduce work correctly</div>
+            </div>
+            <div class="ai-suggestion p-3 rounded fade-in">
+                <div class="flex items-center justify-between mb-2">
+                    <div class="flex items-center space-x-2">
+                        <i class="fas fa-robot text-purple-400"></i>
+                        <span class="font-medium">AI Suggestion</span>
+                    </div>
+                    <button class="text-xs bg-purple-900 hover:bg-purple-800 px-2 py-1 rounded" onclick="applyAISuggestion()">
+                        Apply
+                    </button>
+                </div>
+                <p class="text-sm text-slate-300">Add more test cases for edge conditions</p>
+            </div>
+        `;
+        showToast('Tests executed!', 'success');
+    });
+    
+    // Apply AI Suggestion
+    window.applyAISuggestion = function() {
+        if (editor) {
+            const currentCode = editor.getValue();
+            editor.setValue(currentCode + '\n\n// Added by AI: Performance monitoring\nconsole.time("performance");\n// Your code here\nconsole.timeEnd("performance");');
+            showToast('AI suggestion applied!', 'success');
+        }
+    };
+    
+    // AI Assistant Button
+    document.getElementById('ai-assistant-btn').addEventListener('click', function() {
+        document.getElementById('ai-modal').classList.remove('hidden');
+    });
+    
+    // Close AI Modal
+    document.getElementById('close-ai-modal').addEventListener('click', function() {
+        document.getElementById('ai-modal').classList.add('hidden');
+    });
+    
+    // AI Quick Buttons
+    document.querySelectorAll('.ai-quick-btn').forEach(btn => {
+        btn.addEventListener('click', function() {
+            document.getElementById('ai-prompt').value = this.getAttribute('data-prompt');
+        });
+    });
+    
+    // AI Generate Button
+    document.getElementById('ai-generate').addEventListener('click', function() {
+        const prompt = document.getElementById('ai-prompt').value;
+        if (!prompt.trim()) {
+            showToast('Please enter a prompt', 'error');
+            return;
+        }
+        
+        const aiResponse = document.getElementById('ai-response');
+        const aiResponseContent = document.getElementById('ai-response-content');
+        
+        aiResponseContent.innerHTML = `
+            <div class="text-purple-400 mb-2">Generating response for: "${prompt}"</div>
+            <div class="animate-pulse">
+                <div class="h-2 bg-slate-700 rounded mb-2"></div>
+                <div class="h-2 bg-slate-700 rounded mb-2"></div>
+                <div class="h-2 bg-slate-700 rounded"></div>
+            </div>
+        `;
+        aiResponse.classList.remove('hidden');
+        
+        // Simulate AI response after delay
+        setTimeout(() => {
+            const responses = {
+                "Fix bugs in my code": `// AI Suggestion for Bug Fixes:
+// 1. Check for undefined variables
+if (typeof variable === 'undefined') {
+    console.error('Variable is undefined');
+}
+
+// 2. Add try-catch blocks for error handling
+try {
+    // Your code here
+} catch (error) {
+    console.error('Error occurred:', error);
+}
+
+// 3. Validate inputs
+function validateInput(input) {
+    if (!input) throw new Error('Input required');
+    // Add more validation as needed
+}`,
+                "Optimize my code for better performance": `// AI Optimization Tips:
+// 1. Use for loops instead of forEach for large arrays
+for (let i = 0; i < array.length; i++) {
+    // Process array[i]
+}
+
+// 2. Cache DOM elements
+const element = document.getElementById('myElement');
+
+// 3. Use Map/Set for faster lookups
+const lookup = new Map();
+lookup.set('key', 'value');
+
+// 4. Debounce frequent events
+function debounce(func, delay) {
+    let timeout;
+    return function() {
+        clearTimeout(timeout);
+        timeout = setTimeout(() => func.apply(this, arguments), delay);
+    };
+}`,
+                "Write tests for my code": `// AI-Generated Test Suite:
+describe('My Function', () => {
+    test('should handle normal input', () => {
+        const result = myFunction('input');
+        expect(result).toBe('expected');
+    });
+    
+    test('should handle edge cases', () => {
+        const result = myFunction('');
+        expect(result).toBe('default');
+    });
+    
+    test('should throw error for invalid input', () => {
+        expect(() => myFunction(null)).toThrow();
+    });
+});`,
+                "Explain how this code works": `// AI Code Explanation:
+// 1. Function Declaration - Defines reusable code block
+// 2. Variables - Store data values
+// 3. Control Flow - if/else, loops, switches
+// 4. Error Handling - try/catch blocks
+// 5. Best Practices:
+//    - Use const for values that don't change
+//    - Use descriptive variable names
+//    - Add comments for complex logic
+//    - Follow consistent formatting`
+            };
+            
+            const defaultResponse = `// AI Response:
+// Based on your request: "${prompt}"
+// Here are some general tips:
+// 1. Write clean, readable code with consistent formatting
+// 2. Add comments for complex logic
+// 3. Handle errors gracefully
+// 4. Test your code thoroughly
+// 5. Optimize only when necessary (premature optimization is discouraged)`;
+            
+            aiResponseContent.innerHTML = responses[prompt] || defaultResponse;
+            showToast('AI response generated!', 'success');
+        }, 1500);
+    });
+    
+    // Copy AI Response
+    document.getElementById('copy-ai-response').addEventListener('click', function() {
+        const text = document.getElementById('ai-response-content').innerText;
+        navigator.clipboard.writeText(text).then(() => {
+            showToast('AI response copied!', 'success');
+        });
+    });
+    
+    // Settings Button
+    document.getElementById('settings-btn').addEventListener('click', function() {
+        document.getElementById('settings-modal').classList.remove('hidden');
+    });
+    
+    // Close Settings
+    document.getElementById('close-settings').addEventListener('click', function() {
+        document.getElementById('settings-modal').classList.add('hidden');
+    });
+    
+    // Save Settings
+    document.getElementById('save-settings').addEventListener('click', function() {
+        // Get settings values
+        const autoRun = document.getElementById('auto-run').checked;
+        const inlineResults = document.getElementById('inline-results').checked;
+        const safeMode = document.getElementById('safe-mode').checked;
+        const tabSize = document.getElementById('tab-size').value;
+        
+        // Apply settings
+        if (editor) {
+            editor.setOption('tabSize', parseInt(tabSize));
+        }
+        
+        // Save to localStorage
+        const settings = { autoRun, inlineResults, safeMode, tabSize };
+        localStorage.setItem('js-ide-settings', JSON.stringify(settings));
+        
+        showToast('Settings saved!', 'success');
+        document.getElementById('settings-modal').classList.add('hidden');
+    });
+    
+    // Load saved settings
+    const savedSettings = localStorage.getItem('js-ide-settings');
+    if (savedSettings) {
+        try {
+            const settings = JSON.parse(savedSettings);
+            document.getElementById('auto-run').checked = settings.autoRun || false;
+            document.getElementById('inline-results').checked = settings.inlineResults !== false;
+            document.getElementById('safe-mode').checked = settings.safeMode !== false;
+            document.getElementById('tab-size').value = settings.tabSize || '4';
+        } catch (e) {
+            console.error('Error loading settings:', e);
+        }
+    }
+    
+    // Share Button
+    document.getElementById('share-btn').addEventListener('click', function() {
+        if (!editor) return;
+        
+        const code = editor.getValue();
+        const blob = new Blob([code], { type: 'text/javascript' });
+        const url = URL.createObjectURL(blob);
+        
+        const a = document.createElement('a');
+        a.href = url;
+        a.download = 'code.js';
+        document.body.appendChild(a);
+        a.click();
+        document.body.removeChild(a);
+        URL.revokeObjectURL(url);
+        
+        showToast('Code downloaded as code.js', 'success');
+    });
+    
+    // Download Button
+    document.getElementById('download-btn').addEventListener('click', function() {
+        if (!editor) return;
+        
+        const code = editor.getValue();
+        const blob = new Blob([code], { type: 'text/javascript' });
+        const url = URL.createObjectURL(blob);
+        
+        const a = document.createElement('a');
+        a.href = url;
+        a.download = 'script.js';
+        document.body.appendChild(a);
+        a.click();
+        document.body.removeChild(a);
+        URL.revokeObjectURL(url);
+        
+        showToast('File downloaded as script.js', 'success');
+    });
+    
+    // Import Button
+    document.getElementById('import-btn').addEventListener('click', function() {
+        const input = document.createElement('input');
+        input.type = 'file';
+        input.accept = '.js,.javascript,.txt';
+        
+        input.onchange = function(e) {
+            const file = e.target.files[0];
+            if (!file) return;
+            
+            const reader = new FileReader();
+            reader.onload = function(e) {
+                if (editor) {
+                    editor.setValue(e.target.result);
+                    showToast(`Loaded: ${file.name}`, 'success');
+                }
+            };
+            reader.readAsText(file);
+        };
+        
+        input.click();
+    });
+    
+    // Keyboard Shortcuts
+    document.addEventListener('keydown', function(e) {
+        // Ctrl+Enter or Cmd+Enter to run code
+        if ((e.ctrlKey || e.metaKey) && e.key === 'Enter') {
+            e.preventDefault();
+            runCode();
+        }
+        
+        // Ctrl+S or Cmd+S to save
+        if ((e.ctrlKey || e.metaKey) && e.key === 's') {
+            e.preventDefault();
+            document.getElementById('download-btn').click();
+        }
+        
+        // Ctrl+Space for autocomplete (handled by CodeMirror)
+        if ((e.ctrlKey || e.metaKey) && e.key === ' ') {
+            e.preventDefault();
+            if (editor) {
+                editor.execCommand('autocomplete');
+            }
+        }
+    });
+    
+    // Collaboration Toggle
+    document.getElementById('collab-toggle').addEventListener('click', function() {
+        const isActive = this.classList.toggle('bg-blue-600');
+        const icon = this.querySelector('i');
+        const text = this.querySelector('span:last-child');
+        
+        if (isActive) {
+            text.textContent = 'Collaborating';
+            showToast('Collaboration mode enabled (simulated)', 'info');
+            
+            // Simulate other users
+            setTimeout(() => {
+                const cursor = document.createElement('div');
+                cursor.className = 'absolute w-2 h-5 bg-green-500 animate-pulse';
+                cursor.style.left = '100px';
+                cursor.style.top = '50px';
+                document.getElementById('editor-container').appendChild(cursor);
+            }, 1000);
+        } else {
+            text.textContent = 'Collaborate';
+            showToast('Collaboration disabled', 'warning');
+        }
+    });
+    
+    // Docs Button
+    document.getElementById('docs-btn').addEventListener('click', function() {
+        window.open('https://developer.mozilla.org/en-US/docs/Web/JavaScript', '_blank');
+    });
+    
+    // Snippets Button
+    document.getElementById('snippets-btn').addEventListener('click', function() {
+        showToast('Snippets panel coming soon!', 'info');
+    });
+    
+    // History Button
+    document.getElementById('history-btn').addEventListener('click', function() {
+        const history = localStorage.getItem('js-ide-history');
+        if (history) {
+            const historyArray = JSON.parse(history);
+            const historyHTML = historyArray.slice(-5).map((code, i) => 
+                `<div class="bg-slate-800 p-3 rounded mb-2 text-sm">
+                    <div class="text-slate-400 text-xs mb-1">Previous code #${i + 1}</div>
+                    <div class="font-mono truncate">${code.substring(0, 100)}...</div>
+                </div>`
+            ).join('');
+            
+            document.getElementById('test-results').innerHTML = `
+                <div class="mb-4">
+                    <h3 class="font-medium mb-2">Recent Code History</h3>
+                    ${historyHTML}
+                </div>
+            `;
+        } else {
+            document.getElementById('test-results').innerHTML = 
+                '<div class="text-slate-400">No history found</div>';
+        }
+        
+        showToast('Showing recent history', 'info');
+    });
+    
+    // Save code history periodically
+    if (editor) {
+        let saveTimeout;
+        editor.on('change', function() {
+            clearTimeout(saveTimeout);
+            saveTimeout = setTimeout(() => {
+                const code = editor.getValue();
+                const history = localStorage.getItem('js-ide-history') || '[]';
+                const historyArray = JSON.parse(history);
+                historyArray.push(code);
+                if (historyArray.length > 10) historyArray.shift();
+                localStorage.setItem('js-ide-history', JSON.stringify(historyArray));
+            }, 5000);
+        });
+    }
+}
+
+// ===== UTILITY FUNCTIONS =====
+function showToast(message, type = 'info') {
+    const colors = {
+        success: '#10b981',
+        warning: '#f59e0b',
+        error: '#ef4444',
+        info: '#3b82f6'
+    };
+    
+    Toastify({
+        text: message,
+        duration: 3000,
+        gravity: "top",
+        position: "right",
+        backgroundColor: colors[type] || colors.info,
+        stopOnFocus: true
+    }).showToast();
+}
+
+// ===== INITIALIZE EVERYTHING =====
+// Wait for DOM and CodeMirror to load
+if (document.readyState === 'loading') {
+    document.addEventListener('DOMContentLoaded', initializeIDE);
+} else {
+    setTimeout(initializeIDE, 100);
+}
+
+// Export for debugging
+window.IDE = {
+    editor,
+    runCode,
+    showToast
+};
+
+console.log('Pro JavaScript IDE script loaded');
+</script>
