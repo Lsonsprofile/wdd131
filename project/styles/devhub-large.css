@@ -121,7 +121,7 @@ footer p {
 }
 
 .search-button:hover .search-icon {
-    color: var(--yellowish);
+    color: green;
 }
 
 .favorite-btn {
@@ -168,10 +168,9 @@ footer p {
 
 .clear-btn {
     position: absolute;
-    right: 50px;
+    right: 30px;
     top: 50%;
     transform: translateY(-50%);
-    background: transparent;
     border: none;
     font-size: 1rem;
     font-weight: bold;
@@ -181,6 +180,9 @@ footer p {
     pointer-events: none;
     transition: opacity 0.2s ease;
     display: flex;
+    width: 15%;
+    background-color: #f9faea;
+    box-shadow: 0 0 3px 3px #f9faea;
     align-items: center;
     justify-content: center;
 }
@@ -192,7 +194,7 @@ footer p {
 }
 
 .clear-btn:hover {
-    border-radius: 50%;
+    color: red;
 }
 
 .search-input::-webkit-search-cancel-button {
