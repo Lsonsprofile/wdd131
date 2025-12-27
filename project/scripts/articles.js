@@ -811,7 +811,7 @@ document.addEventListener("DOMContentLoaded", () => {
         <p>Here's what hiring managers really want:</p>
         <ul>
           <li><strong>1 real project > 5 certificates:</strong> Build and deploy something real</li>
-          <strong>GitHub > Certificate:</strong> Show code, not just passed exams</li>
+          <li><strong>GitHub > Certificate:</strong> Show code, not just passed exams</li>
           <li><strong>Contributions > Courses:</strong> Contribute to open source cloud projects</li>
         </ul>
 
@@ -1071,13 +1071,19 @@ document.addEventListener("DOMContentLoaded", () => {
     ];
     
 
-  // 2. Get DOM elements
+// 2. Get DOM elements - ADD NULL CHECKS
   const articlesContainer = document.getElementById("articles-container");
   const heroSection = document.getElementById("hero-article");
   const spotlightSection = document.getElementById("spotlight-article");
   const showcaseBox = document.getElementById("showcase-article");
 
-  // 3. Setup hero section
+  // Check if required elements exist
+  if (!articlesContainer) {
+    console.error("articles-container element not found!");
+    return; // Stop execution if main container doesn't exist
+  }
+
+  // 3. Setup hero section (with null check)
   if (heroSection) {
     if (articles && articles.length > 0) {
       const randomIndex = Math.floor(Math.random() * articles.length);
@@ -1107,7 +1113,12 @@ document.addEventListener("DOMContentLoaded", () => {
   // 4. Setup spotlight section (SEPARATE from hero)
   if (spotlightSection) {
     if (articles && articles.length > 0) {
-      const randomIndex = Math.floor(Math.random() * articles.length);
+      // Make sure we get a different article than hero
+      let randomIndex;
+      do {
+        randomIndex = Math.floor(Math.random() * articles.length);
+      } while (heroSection && articles[randomIndex] === featured); // Only if heroSection exists
+      
       const spotlight = articles[randomIndex];
 
       spotlightSection.innerHTML = `
@@ -1125,19 +1136,20 @@ document.addEventListener("DOMContentLoaded", () => {
           </div>
         </article>
       `;
-    } else {
-      spotlightSection.innerHTML = `
-        <p style="text-align:center;padding:4rem;color:#aaa;font-size:1.2rem">
-          No spotlight articles available yet
-        </p>
-      `;
     }
   }
 
   // 5. Setup showcase section (SEPARATE)
   if (showcaseBox) {
     if (articles && articles.length > 0) {
-      const randomIndex = Math.floor(Math.random() * articles.length);
+      let randomIndex;
+      do {
+        randomIndex = Math.floor(Math.random() * articles.length);
+      } while (
+        (heroSection && articles[randomIndex] === featured) || 
+        (spotlightSection && articles[randomIndex] === spotlight)
+      );
+      
       const showcaseItem = articles[randomIndex];
 
       showcaseBox.innerHTML = `
@@ -1155,33 +1167,44 @@ document.addEventListener("DOMContentLoaded", () => {
           </div>
         </article>
       `;
-    } else {
-      showcaseBox.innerHTML = `
-        <p style="text-align:center;padding:4rem;color:#aaa;font-size:1.2rem">
-          No showcase articles available yet
-        </p>
-      `;
     }
   }
 
   // 6. Favorites functionality
-  const getFavorites = () => JSON.parse(localStorage.getItem("devhub-favorites") || "[]");
-  const saveFavorites = (arr) => localStorage.setItem("devhub-favorites", JSON.stringify(arr));
+  const getFavorites = () => {
+    try {
+      return JSON.parse(localStorage.getItem("devhub-favorites") || "[]");
+    } catch (e) {
+      console.error("Error reading favorites from localStorage:", e);
+      return [];
+    }
+  };
+  
+  const saveFavorites = (arr) => {
+    try {
+      localStorage.setItem("devhub-favorites", JSON.stringify(arr));
+    } catch (e) {
+      console.error("Error saving favorites to localStorage:", e);
+    }
+  };
+  
   const toggleFavorite = (title) => {
     const favs = getFavorites();
     const index = favs.indexOf(title);
-    if (index === -1) favs.push(title);
-    else favs.splice(index, 1);
+    if (index === -1) {
+      favs.push(title);
+    } else {
+      favs.splice(index, 1);
+    }
     saveFavorites(favs);
-    return index === -1;
+    return index === -1; // Returns true if added, false if removed
   };
 
   // 7. Create article card function
-   const createArticleCard = (article) => {
+  const createArticleCard = (article) => {
     const card = document.createElement("article");
     card.className = "article-card";
     
-    // FIX: Get fresh favorites EVERY TIME we create a card
     const currentFavorites = getFavorites();
     const isFavorited = currentFavorites.includes(article.title);
     
@@ -1196,7 +1219,8 @@ document.addEventListener("DOMContentLoaded", () => {
         </div>
         <p class="article-summary">${article.summary}</p>
         <div class="article-actions">
-          <button class="read-more-btn" data-content="${article.content.replace(/"/g, '&quot;')}">
+          <button class="read-more-btn" data-title="${article.title}" 
+                  data-content="${article.content.replace(/"/g, '&quot;')}">
             Read Article →
           </button>
           <button class="favorite-btn ${isFavorited ? 'favorited' : ''}" data-title="${article.title}">
@@ -1217,7 +1241,6 @@ document.addEventListener("DOMContentLoaded", () => {
       const wasFavorited = btn.classList.contains("favorited");
       const nowFavorited = toggleFavorite(title);
 
-      // FIX: Update the button appearance immediately
       btn.classList.toggle("favorited", nowFavorited);
 
       if (nowFavorited && !wasFavorited) {
@@ -1226,7 +1249,6 @@ document.addEventListener("DOMContentLoaded", () => {
         showToast(`"${title}" removed from favorites`);
       }
 
-      // FIX: Dispatch event to update UI
       document.dispatchEvent(new Event("favoritesUpdated"));
     });
 
@@ -1269,40 +1291,74 @@ document.addEventListener("DOMContentLoaded", () => {
     setTimeout(() => {
       toast.style.opacity = "0";
       toast.style.transform = "translateX(-50%) translateY(20px)";
-      toast.addEventListener("transitionend", () => toast.remove());
+      setTimeout(() => {
+        if (toast.parentNode) {
+          toast.parentNode.removeChild(toast);
+        }
+      }, 400);
     }, 2500);
   }
 
-  // 9. Function to display articles (GLOBAL SCOPE)
+  // 9. Function to display articles
   const displayArticles = (list = articles) => {
     if (!articlesContainer) return;
     
-    const h1 = articlesContainer.querySelector("h1");
-    articlesContainer.innerHTML = "";
-    if (h1) articlesContainer.appendChild(h1);
-
+    articlesContainer.innerHTML = '';
+    
     if (!list || list.length === 0) {
-      articlesContainer.innerHTML += `<p style="grid-column:1/-1;text-align:center;padding:3rem">No articles found</p>`;
+      const noResults = document.createElement('p');
+      noResults.style.cssText = 'grid-column:1/-1;text-align:center;padding:3rem;color:#aaa';
+      noResults.textContent = 'No articles found';
+      articlesContainer.appendChild(noResults);
     } else {
-      list.forEach(article => articlesContainer.appendChild(createArticleCard(article)));
+      list.forEach(article => {
+        articlesContainer.appendChild(createArticleCard(article));
+      });
     }
   };
 
   // 10. Initial display of articles
-  if (articlesContainer) {
-    displayArticles();
-  }
+  displayArticles();
 
   // 11. Modal for full article
   document.addEventListener("click", e => {
     const btn = e.target.closest(".read-more-btn");
     if (!btn) return;
 
+    const articleTitle = btn.dataset.title;
+    const articleContent = btn.dataset.content;
+    
+    if (!articleContent) {
+      console.error("No content found for article");
+      return;
+    }
+
     const backdrop = document.createElement("div");
     backdrop.className = "modal-backdrop";
+    backdrop.style.cssText = `
+      position: fixed;
+      top: 0;
+      left: 0;
+      right: 0;
+      bottom: 0;
+      background-color: rgba(0, 0, 0, 0.8);
+      z-index: 9999;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+    `;
 
     const dialog = document.createElement("article");
     dialog.className = "full-article-dialog";
+    dialog.style.cssText = `
+
+      padding: 2rem;
+      border-radius: 16px;
+      max-width: 800px;
+      max-height: 90vh;
+      overflow-y: auto;
+      position: relative;
+    `;
 
     const closeBtn = document.createElement("button");
     closeBtn.className = "dialog-close-btn";
@@ -1311,16 +1367,26 @@ document.addEventListener("DOMContentLoaded", () => {
 
     const articleBody = document.createElement("div");
     articleBody.className = "article-body";
-    articleBody.innerHTML = btn.dataset.content;
+    articleBody.innerHTML = articleContent;
 
     dialog.append(closeBtn, articleBody);
     backdrop.appendChild(dialog);
     document.body.appendChild(backdrop);
+    document.body.style.overflow = 'hidden'; // Prevent html body scrolling
 
-    const closeModal = () => backdrop.remove();
+    const closeModal = () => {
+      if (backdrop.parentNode) {
+        backdrop.parentNode.removeChild(backdrop);
+      }
+      document.body.style.overflow = ''; // Restore scrolling
+    };
 
     closeBtn.onclick = closeModal;
-    backdrop.onclick = (e) => e.target === backdrop && closeModal();
+    backdrop.onclick = (e) => {
+      if (e.target === backdrop) {
+        closeModal();
+      }
+    };
 
     const escHandler = (e) => {
       if (e.key === "Escape") {
@@ -1329,69 +1395,204 @@ document.addEventListener("DOMContentLoaded", () => {
       }
     };
     document.addEventListener("keydown", escHandler);
-    closeBtn.focus();
+
+    // Focus trap
+    const focusableElements = dialog.querySelectorAll('button, [href], input, select, textarea, [tabindex]:not([tabindex="-1"])');
+    if (focusableElements.length > 0) {
+      const firstFocusableElement = focusableElements[0];
+      const lastFocusableElement = focusableElements[focusableElements.length - 1];
+      
+      firstFocusableElement.focus();
+      
+      const trapFocus = (e) => {
+        if (e.key === 'Tab') {
+          if (e.shiftKey) {
+            if (document.activeElement === firstFocusableElement) {
+              lastFocusableElement.focus();
+              e.preventDefault();
+            }
+          } else {
+            if (document.activeElement === lastFocusableElement) {
+              firstFocusableElement.focus();
+              e.preventDefault();
+            }
+          }
+        }
+      };
+      
+      dialog.addEventListener('keydown', trapFocus);
+    }
   });
 
   // 12. Favorites toggle button
-  // FIXED: Favorites toggle button
-const toggleBtn = document.getElementById("toggle-favs");
-const favCount = document.getElementById("fav-count");
-
-let showingFavorites = false;
-
-if (toggleBtn) {
-  const updateFavoritesButton = () => {
-    const count = getFavorites().length;
-    if (favCount) favCount.textContent = count;
-    
-    // Don't disable button - let users click to see "no favorites" message
-    // toggleBtn.disabled = count === 0; // REMOVE THIS LINE
-    
-    if (!showingFavorites) {
-      toggleBtn.textContent = `Show Favorites Only (${count})`;
-    }
-  };
-
-  toggleBtn.addEventListener("click", () => {
-    if (showingFavorites) {
-      // Show all articles (ALWAYS works)
-      displayArticles();
-      toggleBtn.textContent = `Show Favorites Only (${getFavorites().length})`;
-      showingFavorites = false;
-    } else {
-      // Show favorites (even if empty array)
-      const favs = articles.filter(a => getFavorites().includes(a.title));
-      displayArticles(favs);
-      toggleBtn.textContent = "← Back to All Articles";
-      showingFavorites = true;
-    }
-    
-    updateFavoritesButton();
-  });
-
-  // Initial update
-  updateFavoritesButton();
+  const toggleBtn = document.getElementById("toggle-favs");
+  const favCount = document.getElementById("fav-count");
   
-  // Listen for favorites updates
-  document.addEventListener("favoritesUpdated", () => {
+  let showingFavorites = false;
+
+  if (toggleBtn) {
+    const updateFavoritesButton = () => {
+      const count = getFavorites().length;
+      if (favCount) {
+        favCount.textContent = count;
+      }
+      
+      if (!showingFavorites) {
+        toggleBtn.textContent = `Show Favorites Only (${count})`;
+      }
+    };
+
+    toggleBtn.addEventListener("click", () => {
+      if (showingFavorites) {
+        // Show all articles
+        displayArticles();
+        toggleBtn.textContent = `Show Favorites Only (${getFavorites().length})`;
+        showingFavorites = false;
+      } else {
+        // Show favorites
+        const favs = articles.filter(a => getFavorites().includes(a.title));
+        displayArticles(favs);
+        toggleBtn.textContent = "← Back to All Articles";
+        showingFavorites = true;
+      }
+      
+      updateFavoritesButton();
+    });
+
+    // Initial update
     updateFavoritesButton();
     
-    // If we're in favorites view, refresh the display
-    if (showingFavorites) {
-      const favs = articles.filter(a => getFavorites().includes(a.title));
-      displayArticles(favs);
-    }
-  });
-}
+    // Listen for favorites updates
+    document.addEventListener("favoritesUpdated", () => {
+      updateFavoritesButton();
+      
+      if (showingFavorites) {
+        const favs = articles.filter(a => getFavorites().includes(a.title));
+        displayArticles(favs);
+      }
+    });
+  }
 
   // 13. Search functionality
   const searchInput = document.getElementById("search-input");
   const searchBtn = document.getElementById("search-btn");
   const clearBtn = document.getElementById("clear-search");
+  const searchResults = document.getElementById("search-results");
+  const searchForm = document.querySelector('.search-form');
+  
+  if (searchInput && searchBtn && searchResults) {
+    let selectedResultIndex = -1;
 
-  if (searchInput && searchBtn) {
+    // Function to get search suggestions
+    const getSearchSuggestions = (query) => {
+      if (query.length < 1) return [];
+      
+      const lowercaseQuery = query.toLowerCase();
+      const scoredArticles = articles.map(article => {
+        let score = 0;
+        const title = article.title.toLowerCase();
+        const author = article.author.toLowerCase();
+        const summary = article.summary.toLowerCase();
+        
+        if (title.includes(lowercaseQuery)) {
+          score += 10;
+          if (title.startsWith(lowercaseQuery)) score += 5;
+        }
+        
+        if (author.includes(lowercaseQuery)) {
+          score += 5;
+          if (author.startsWith(lowercaseQuery)) score += 3;
+        }
+        
+        if (summary.includes(lowercaseQuery)) {
+          score += 1;
+        }
+        
+        return { ...article, score };
+      })
+      .filter(article => article.score > 0)
+      .sort((a, b) => b.score - a.score);
+      
+      return scoredArticles.slice(0, 5);
+    };
+
+    // Function to show autocomplete results
+    const showAutocompleteResults = (suggestions, query) => {
+      selectedResultIndex = -1;
+      searchResults.innerHTML = '';
+      
+      if (suggestions.length === 0 || !query) {
+        searchResults.classList.remove('show');
+        searchInput.setAttribute('aria-expanded', 'false');
+        return;
+      }
+      
+      suggestions.forEach((article, index) => {
+        const li = document.createElement('li');
+        li.className = 'autocomplete-item';
+        li.setAttribute('role', 'option');
+        li.setAttribute('aria-selected', 'false');
+        li.setAttribute('id', `suggestion-${index}`);
+        li.setAttribute('data-index', index);
+        li.setAttribute('data-title', article.title);
+        
+        // Simple highlight function
+        const highlight = (text) => {
+          if (!query) return text;
+          const regex = new RegExp(`(${query.replace(/[.*+?^${}()|[\]\\]/g, '\\$&')})`, 'gi');
+          return text.replace(regex, '<mark>$1</mark>');
+        };
+        
+        li.innerHTML = `
+          <div class="autocomplete-title">${highlight(article.title)}</div>
+          <div class="autocomplete-author">by ${highlight(article.author)}</div>
+          <div class="autocomplete-summary">${highlight(article.summary)}</div>
+        `;
+        
+        li.addEventListener('click', () => {
+          searchInput.value = article.title;
+          searchInput.focus();
+          searchResults.classList.remove('show');
+          searchInput.setAttribute('aria-expanded', 'false');
+          performSearch();
+        });
+        
+        li.addEventListener('mouseenter', () => {
+          setSelectedResult(index);
+        });
+        
+        searchResults.appendChild(li);
+      });
+      
+      searchResults.classList.add('show');
+      searchInput.setAttribute('aria-expanded', 'true');
+    };
+
+    // Function to set selected result
+    const setSelectedResult = (index) => {
+      if (selectedResultIndex >= 0) {
+        const prevItem = document.getElementById(`suggestion-${selectedResultIndex}`);
+        if (prevItem) {
+          prevItem.setAttribute('aria-selected', 'false');
+          prevItem.classList.remove('selected');
+        }
+      }
+      
+      selectedResultIndex = index;
+      const currentItem = document.getElementById(`suggestion-${selectedResultIndex}`);
+      if (currentItem) {
+        currentItem.setAttribute('aria-selected', 'true');
+        currentItem.classList.add('selected');
+        currentItem.scrollIntoView({ block: 'nearest' });
+      }
+    };
+
+    // Function to perform search
     const performSearch = () => {
       const query = searchInput.value.trim().toLowerCase();
+      searchResults.classList.remove('show');
+      searchInput.setAttribute('aria-expanded', 'false');
+      
       if (query === "") {
         displayArticles();
         return;
@@ -1406,21 +1607,97 @@ if (toggleBtn) {
       displayArticles(filtered);
     };
 
-    searchBtn.addEventListener("click", performSearch);
+    // Event listener for input (autocomplete)
+    searchInput.addEventListener('input', () => {
+      const query = searchInput.value.trim();
+      
+      if (clearBtn) {
+        clearBtn.style.opacity = query ? '1' : '0';
+        clearBtn.style.pointerEvents = query ? 'all' : 'none';
+      }
+      
+      if (query.length >= 1) {
+        const suggestions = getSearchSuggestions(query);
+        showAutocompleteResults(suggestions, query.toLowerCase());
+      } else {
+        searchResults.classList.remove('show');
+        searchInput.setAttribute('aria-expanded', 'false');
+      }
+    });
+
+    // Event listener for search button
+    searchBtn.addEventListener('click', performSearch);
     
-    searchInput.addEventListener("keypress", e => {
-      if (e.key === "Enter") {
+    // Event listener for Enter key
+    searchInput.addEventListener('keypress', e => {
+      if (e.key === 'Enter') {
         e.preventDefault();
         performSearch();
       }
     });
 
+    // Keyboard navigation for autocomplete
+    searchInput.addEventListener('keydown', (e) => {
+      if (!searchResults.classList.contains('show')) return;
+      
+      const items = searchResults.querySelectorAll('.autocomplete-item');
+      
+      switch (e.key) {
+        case 'ArrowDown':
+          e.preventDefault();
+          if (items.length === 0) return;
+          if (selectedResultIndex < items.length - 1) {
+            setSelectedResult(selectedResultIndex + 1);
+          } else {
+            setSelectedResult(0);
+          }
+          break;
+          
+        case 'ArrowUp':
+          e.preventDefault();
+          if (items.length === 0) return;
+          if (selectedResultIndex > 0) {
+            setSelectedResult(selectedResultIndex - 1);
+          } else {
+            setSelectedResult(items.length - 1);
+          }
+          break;
+          
+        case 'Escape':
+          searchResults.classList.remove('show');
+          searchInput.setAttribute('aria-expanded', 'false');
+          selectedResultIndex = -1;
+          break;
+          
+        case 'Tab':
+          searchResults.classList.remove('show');
+          searchInput.setAttribute('aria-expanded', 'false');
+          selectedResultIndex = -1;
+          break;
+      }
+    });
+
+    // Clear search button
     if (clearBtn) {
-      clearBtn.addEventListener("click", () => {
-        searchInput.value = "";
+      clearBtn.addEventListener('click', () => {
+        searchInput.value = '';
         searchInput.focus();
+        searchResults.classList.remove('show');
+        searchInput.setAttribute('aria-expanded', 'false');
         displayArticles();
+        
+        clearBtn.style.opacity = '0';
+        clearBtn.style.pointerEvents = 'none';
       });
     }
+
+    // Close autocomplete when clicking outside
+    document.addEventListener('click', (e) => {
+      if (searchForm && !searchForm.contains(e.target)) {
+        searchResults.classList.remove('show');
+        searchInput.setAttribute('aria-expanded', 'false');
+        selectedResultIndex = -1;
+      }
+    });
   }
 });
