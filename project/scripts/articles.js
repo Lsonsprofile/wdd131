@@ -1071,7 +1071,7 @@ document.addEventListener("DOMContentLoaded", () => {
     ];
     
 
-// 2. Get DOM elements - ADD NULL CHECKS
+// 2. Get DOM elements
   const articlesContainer = document.getElementById("articles-container");
   const heroSection = document.getElementById("hero-article");
   const spotlightSection = document.getElementById("spotlight-article");
@@ -1079,95 +1079,96 @@ document.addEventListener("DOMContentLoaded", () => {
 
   // Check if required elements exist
   if (!articlesContainer) {
-    console.error("articles-container element not found!");
-    return; // Stop execution if main container doesn't exist
+      console.error("articles-container element not found!");
+      // Don't return - we can still try to setup other sections
   }
 
-  // 3. Setup hero section (with null check)
-  if (heroSection) {
-    if (articles && articles.length > 0) {
+  // Declare these variables at the top level of the function
+  let featuredArticle = null;
+  let spotlightArticle = null;
+  let showcaseArticle = null;
+
+  // 3. Setup hero section
+  if (heroSection && articles.length > 0) {
       const randomIndex = Math.floor(Math.random() * articles.length);
-      const featured = articles[randomIndex];
+      featuredArticle = articles[randomIndex];
 
       heroSection.innerHTML = `
-        <h1 class="featured">FEATURED ARTICLE</h1>
-        <article class="hero-card">
-          <div class="img-container">
-            <img src="${featured.image}" alt="${featured.title}" class="hero-img" loading="lazy">
-          </div>
-          <div class="hero-content">
-            <h3 class="hero-title">${featured.title}</h3>
-            <h5 class="hero-summary">${featured.summary}</h5>
-          </div>
-        </article>
+          <h1 class="featured">FEATURED ARTICLE</h1>
+          <article class="hero-card">
+              <div class="img-container">
+                  <img src="${featuredArticle.image}" alt="${featuredArticle.title}" class="hero-img" loading="lazy">
+              </div>
+              <div class="hero-content">
+                  <h3 class="hero-title">${featuredArticle.title}</h3>
+                  <h5 class="hero-summary">${featuredArticle.summary}</h5>
+              </div>
+          </article>
       `;
-    } else {
+  } else if (heroSection) {
       heroSection.innerHTML = `
-        <p style="text-align:center;padding:4rem;color:#aaa;font-size:1.2rem">
-          No articles available yet
-        </p>
+          <p style="text-align:center;padding:4rem;color:#aaa;font-size:1.2rem">
+              No articles available yet
+          </p>
       `;
-    }
   }
 
-  // 4. Setup spotlight section (SEPARATE from hero)
-  if (spotlightSection) {
-    if (articles && articles.length > 0) {
-      // Make sure we get a different article than hero
+  // 4. Setup spotlight section
+  if (spotlightSection && articles.length > 0) {
       let randomIndex;
+      // Try to get a different article than hero
       do {
-        randomIndex = Math.floor(Math.random() * articles.length);
-      } while (heroSection && articles[randomIndex] === featured); // Only if heroSection exists
+          randomIndex = Math.floor(Math.random() * articles.length);
+      } while (featuredArticle && articles[randomIndex] === featuredArticle && articles.length > 1);
       
-      const spotlight = articles[randomIndex];
+      spotlightArticle = articles[randomIndex];
 
       spotlightSection.innerHTML = `
-        <h1 class="section-lead">SPOTLIGHT</h1>
-        <article class="highlight-block">
-          <div class="highlight-image-container">
-            <img src="${spotlight.image}" 
-                 alt="${spotlight.title}" 
-                 class="highlight-image" 
-                 loading="lazy">
-          </div>
-          <div class="highlight-body">
-            <h3 class="highlight-heading">${spotlight.title}</h3>
-            <h5 class="highlight-subtext">${spotlight.summary}</h5>
-          </div>
-        </article>
+          <h1 class="section-lead">SPOTLIGHT</h1>
+          <article class="highlight-block">
+              <div class="highlight-image-container">
+                  <img src="${spotlightArticle.image}" 
+                        alt="${spotlightArticle.title}" 
+                        class="highlight-image" 
+                        loading="lazy">
+              </div>
+              <div class="highlight-body">
+                  <h3 class="highlight-heading">${spotlightArticle.title}</h3>
+                  <h5 class="highlight-subtext">${spotlightArticle.summary}</h5>
+              </div>
+          </article>
       `;
-    }
   }
 
-  // 5. Setup showcase section (SEPARATE)
-  if (showcaseBox) {
-    if (articles && articles.length > 0) {
+  // 5. Setup showcase section
+  if (showcaseBox && articles.length > 0) {
       let randomIndex;
+      // Try to get a different article than hero or spotlight
       do {
-        randomIndex = Math.floor(Math.random() * articles.length);
+          randomIndex = Math.floor(Math.random() * articles.length);
       } while (
-        (heroSection && articles[randomIndex] === featured) || 
-        (spotlightSection && articles[randomIndex] === spotlight)
+          articles.length > 2 && 
+          ((featuredArticle && articles[randomIndex] === featuredArticle) || 
+            (spotlightArticle && articles[randomIndex] === spotlightArticle))
       );
       
-      const showcaseItem = articles[randomIndex];
+      showcaseArticle = articles[randomIndex];
 
       showcaseBox.innerHTML = `
-        <h1 class="banner-heading">GOSSIP</h1>
-        <article class="highlight-block">
-          <div class="showcase-image-container">
-            <img src="${showcaseItem.image}" 
-                 alt="${showcaseItem.title}" 
-                 class="feature-photo" 
-                 loading="lazy">
-          </div>
-          <div class="feature-details">
-            <h3 class="feature-headline">${showcaseItem.title}</h3>
-            <h5 class="feature-blurb">${showcaseItem.summary}</h5>
-          </div>
-        </article>
+          <h1 class="banner-heading">GOSSIP</h1>
+          <article class="highlight-block">
+              <div class="showcase-image-container">
+                  <img src="${showcaseArticle.image}" 
+                        alt="${showcaseArticle.title}" 
+                        class="feature-photo" 
+                        loading="lazy">
+              </div>
+              <div class="feature-details">
+                  <h3 class="feature-headline">${showcaseArticle.title}</h3>
+                  <h5 class="feature-blurb">${showcaseArticle.summary}</h5>
+              </div>
+          </article>
       `;
-    }
   }
 
   // 6. Favorites functionality
