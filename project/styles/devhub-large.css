@@ -174,15 +174,15 @@ footer p {
     border: none;
     font-size: 1rem;
     font-weight: bold;
-    color: var(--cta-orange);
+    color: var(--dark-blue);
     cursor: pointer;
     opacity: 0;
     pointer-events: none;
     transition: opacity 0.2s ease;
     display: flex;
     width: 15%;
-    background-color: #f9faea;
-    box-shadow: 0 0 3px 3px #f9faea;
+    background-color: #ffffff;
+    box-shadow: 0 0 3px 3px #ffffff;
     align-items: center;
     justify-content: center;
 }
@@ -490,9 +490,7 @@ footer p {
 }
 
 a:focus,
-button:focus,
 input:focus,
-.search-button:focus,
 .favorite-btn:focus,
 .read-more-btn:focus,
 .card-favorite-btn:focus {
