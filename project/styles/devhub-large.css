@@ -194,7 +194,7 @@ footer p {
 }
 
 .clear-btn:hover {
-    color: red;
+    color: rgb(167, 13, 13);
 }
 
 .search-input::-webkit-search-cancel-button {
@@ -492,10 +492,11 @@ footer p {
 a:focus,
 input:focus,
 .favorite-btn:focus,
+.dialog-close-btn:focus,
 .read-more-btn:focus,
 .card-favorite-btn:focus {
     outline: 2px solid var(--yellowish);
-    outline-offset: 2px;
+    outline-offset: 0.5px;
 }
 
 
