@@ -3,106 +3,145 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <meta name="description" content="References and credits for Emmanuel Ndogo's Front-End Designer Audit Tool">
-    <title>Credits & References – Front-End Designer Audit Tool</title>
+    <meta name="description" content="Project references and credits for Emmanuel Ndogo's web development projects including WDD 131 TechHub and Front-End Designer Audit Tool">
+    <title>Project References & Credits – Emmanuel Ndogo</title>
 </head>
 <body>
     <header>
-        <h1>Credits, Resources & References</h1>
+        <h1>Project References & Credits</h1>
+        <h2>Emmanuel Ndogo – Web Development Projects</h2>
     </header>
 
     <main>
         <section>
-            <h3>Project Overview</h3>
-            <p><strong>Emmanuel Ndogo – Front-End Designer Audit Tool</strong></p>
-            <p>This tool was built from scratch using modern HTML5, CSS3, and vanilla JavaScript to help designers and developers audit web pages for essential front-end best practices. The tool features URL analysis, automated checklist validation, source code extraction, and integration with industry-standard validation services.</p>
+            <h3>Project 1: TechHub Blog (WDD 131 Final Project)</h3>
             
-            <p><strong>Core Features:</strong></p>
-            <ul>
-                <li>Real-time URL auditing with automated HTML analysis</li>
-                <li>Interactive checklist with 7 essential categories</li>
-                <li>Source code extraction and download functionality</li>
-                <li>Integration with official W3C validation services</li>
-                <li>Responsive design that works on all devices</li>
-                <li>Browser-based (no data sent to external servers)</li>
-            </ul>
+            <article>
+                <h4>Project Overview</h4>
+                <p><strong>Emmanuel Ndogo – WDD 131 Final Project Summary</strong></p>
+                
+                <p>This dynamic tech blog consists of three fully responsive pages built from scratch using contemporary HTML5, CSS3, and vanilla JavaScript – no third-party frameworks or templates were used.</p>
+                
+                <h5>Key Features by Page:</h5>
+                
+                <p><strong>devhub.html (Home Page)</strong></p>
+                <ul>
+                    <li>Hero section that randomly showcases a featured article on every visit (JavaScript-powered)</li>
+                    <li>On large screens: Sidebar displays latest articles</li>
+                    <li>On mobile devices: Sidebar collapses below hero for optimal readability</li>
+                    <li>Additional sections: Spotlight and Gossip</li>
+                    <li>Social media links permanently visible in responsive sidebar</li>
+                </ul>
+                
+                <p><strong>articles.html</strong></p>
+                <ul>
+                    <li>Dynamically loads all articles via JavaScript DOM manipulation from an array of objects</li>
+                    <li>Real-time search across titles, authors, and summaries</li>
+                    <li>Filter by favorites functionality</li>
+                    <li>Save articles using localStorage</li>
+                    <li>Favorite status instantly reflected with static heart buttons and toast notifications</li>
+                    <li>Responsive grid layout: Three columns on desktop, one column on mobile</li>
+                </ul>
+                
+                <p><strong>about.html</strong></p>
+                <ul>
+                    <li>Personal biography section</li>
+                    <li>Fully accessible contact form with proper labels and required fields</li>
+                    <li>Client-side validation</li>
+                    <li>Confirmation message and form reset upon successful submission</li>
+                </ul>
+                
+                <h5>Technical Implementation:</h5>
+                <ul>
+                    <li>All images include <code>loading="lazy"</code> for performance optimization</li>
+                    <li>External CSS cleanly separated</li>
+                    <li>Passes HTML and CSS validation with zero errors</li>
+                    <li>JavaScript demonstrates: multiple functions, DOM manipulation, event listeners, conditional logic, arrays and array methods, objects, template literals, and localStorage usage</li>
+                </ul>
+                
+                <h5>Content Sources:</h5>
+                <ul>
+                    <li><strong>Article Content:</strong> Originally written by AI for project demonstration purposes</li>
+                    <li><strong>Images:</strong> Sourced from Google Images and free stock photo websites</li>
+                    <li><strong>Educational Use:</strong> All external content used for educational purposes only</li>
+                </ul>
+            </article>
         </section>
 
         <section>
-            <h3>Core Validation Services & Credits</h3>
+            <h3>Project 2: Front-End Designer Audit Tool</h3>
             
             <article>
-                <h4>1. W3C HTML Validator</h4>
+                <h4>Project Overview</h4>
+                <p>This tool was built from scratch using modern HTML5, CSS3, and vanilla JavaScript to help designers and developers audit web pages for essential front-end best practices. The tool features URL analysis, automated checklist validation, source code extraction, and integration with industry-standard validation services.</p>
+                
+                <h5>Core Features:</h5>
+                <ul>
+                    <li>Real-time URL auditing with automated HTML analysis</li>
+                    <li>Interactive checklist with 7 essential categories</li>
+                    <li>Source code extraction and download functionality</li>
+                    <li>Integration with official W3C validation services</li>
+                    <li>Responsive design that works on all devices</li>
+                    <li>Browser-based (no data sent to external servers)</li>
+                </ul>
+            </article>
+            
+            <article>
+                <h4>Core Validation Services & Credits</h4>
+                
+                <h5>1. W3C HTML Validator</h5>
                 <p><strong>URL:</strong> https://validator.w3.org/nu/</p>
-                <p><strong>How it works:</strong> This is the official W3C HTML validation service. When you click the "HTML Validator" button, it sends the webpage URL to W3C's validation engine which checks the HTML markup against current web standards. It returns detailed error reports, warnings, and suggestions for fixing invalid HTML.</p>
-            </article>
-
-            <article>
-                <h4>2. W3C CSS Validator</h4>
+                <p><strong>How it works:</strong> Official W3C HTML validation service that checks HTML markup against current web standards and returns detailed error reports.</p>
+                
+                <h5>2. W3C CSS Validator</h5>
                 <p><strong>URL:</strong> https://jigsaw.w3.org/css-validator/</p>
-                <p><strong>How it works:</strong> The official W3C CSS validation service analyzes all CSS stylesheets linked to the webpage. It checks for syntax errors, invalid properties, browser compatibility issues, and accessibility-related CSS problems. Results show line-by-line errors and warnings.</p>
-            </article>
-
-            <article>
-                <h4>3. WAVE Accessibility Evaluation Tool</h4>
+                <p><strong>How it works:</strong> Official W3C CSS validation service that analyzes CSS stylesheets for syntax errors and compatibility issues.</p>
+                
+                <h5>3. WAVE Accessibility Evaluation Tool</h5>
                 <p><strong>URL:</strong> https://wave.webaim.org/</p>
-                <p><strong>How it works:</strong> Developed by WebAIM, WAVE is a comprehensive accessibility testing tool. It analyzes the webpage and visualizes accessibility issues directly on the page. It checks for WCAG (Web Content Accessibility Guidelines) compliance including contrast ratios, keyboard navigation, ARIA attributes, and semantic structure.</p>
-            </article>
-
-            <article>
-                <h4>4. Google PageSpeed Insights</h4>
+                <p><strong>How it works:</strong> Comprehensive accessibility testing tool that checks for WCAG compliance including contrast ratios and keyboard navigation.</p>
+                
+                <h5>4. Google PageSpeed Insights</h5>
                 <p><strong>URL:</strong> https://pagespeed.web.dev/</p>
-                <p><strong>How it works:</strong> Google's performance analysis tool that audits webpage performance on both mobile and desktop. It simulates real-world loading conditions and provides scores for Core Web Vitals (Largest Contentful Paint, First Input Delay, Cumulative Layout Shift), along with optimization suggestions for images, JavaScript, CSS, and hosting.</p>
-            </article>
-
-            <article>
-                <h4>5. FreeFormatter HTML Validator</h4>
+                <p><strong>How it works:</strong> Performance analysis tool that audits webpage loading speed and Core Web Vitals.</p>
+                
+                <h5>5. FreeFormatter HTML Validator</h5>
                 <p><strong>URL:</strong> https://www.freeformatter.com/html-validator.html</p>
-                <p><strong>How it works:</strong> An alternative HTML validation service that allows you to upload HTML files or paste source code directly. It's particularly useful for local file validation when you can't publicly host a webpage. It provides detailed error messages with line numbers and explanations.</p>
+                <p><strong>How it works:</strong> Alternative HTML validation service for uploading files or pasting source code directly.</p>
             </article>
-        </section>
-
-        <section>
-            <h3>API & Service Providers</h3>
             
             <article>
-                <h4>AllOrigins CORS Proxy</h4>
+                <h4>API & Service Providers</h4>
+                <h5>AllOrigins CORS Proxy</h5>
                 <p><strong>Service:</strong> https://api.allorigins.win/</p>
-                <p><strong>How it works:</strong> This tool provides a workaround for CORS (Cross-Origin Resource Sharing) restrictions. When auditing URLs, browsers block direct fetching from different domains for security. The AllOrigins proxy acts as an intermediary that fetches the webpage content and returns it with appropriate CORS headers, allowing the audit tool to analyze any public webpage.</p>
+                <p><strong>How it works:</strong> Provides a workaround for CORS restrictions when fetching webpage content for analysis.</p>
             </article>
-        </section>
-
-        <section>
-            <h3>Technology Stack</h3>
             
             <article>
-                <h4>Google Fonts</h4>
-                <p><strong>Fonts:</strong> Inter & JetBrains Mono</p>
-                <p><strong>How it works:</strong> These fonts are loaded from Google's CDN (Content Delivery Network). They provide clean, modern typography that enhances readability. The fonts are served with proper font-display settings to prevent layout shifts during loading.</p>
-            </article>
-
-            <article>
-                <h4>Local Storage API</h4>
-                <p><strong>Technology:</strong> Web Storage API</p>
-                <p><strong>How it works:</strong> The browser's localStorage is used to temporarily save audit progress and URL history. This allows the tool to remember your work within a single browser session. No data is sent to external servers - everything remains in your browser.</p>
+                <h4>Technology Stack</h4>
+                <h5>Google Fonts</h5>
+                <p><strong>Fonts:</strong> Inter & JetBrains Mono – loaded from Google's CDN for modern typography.</p>
+                
+                <h5>Local Storage API</h5>
+                <p><strong>Technology:</strong> Web Storage API – used to save audit progress within the browser session.</p>
             </article>
         </section>
 
         <section>
-            <h3>How the Tool Works</h3>
+            <h3>How the Audit Tool Works</h3>
             
             <h4>URL Audit Process:</h4>
             <ol>
-                <li><strong>Fetch:</strong> The tool uses fetch API with CORS proxy to retrieve webpage HTML</li>
-                <li><strong>Parse:</strong> The HTML is parsed using DOMParser to create a virtual DOM</li>
-                <li><strong>Analyze:</strong> Automated checks run against the parsed DOM structure</li>
-                <li><strong>External Validation:</strong> URLs are constructed with parameters and opened in new tabs</li>
+                <li><strong>Fetch:</strong> Uses fetch API with CORS proxy to retrieve webpage HTML</li>
+                <li><strong>Parse:</strong> HTML parsed using DOMParser to create virtual DOM</li>
+                <li><strong>Analyze:</strong> Automated checks run against parsed DOM structure</li>
+                <li><strong>External Validation:</strong> URLs constructed with parameters and opened in new tabs</li>
             </ol>
 
             <h4>Source Code Extraction:</h4>
             <ol>
-                <li><strong>Capture:</strong> Raw HTML source code is saved from the fetched response</li>
-                <li><strong>Format:</strong> Code is formatted with line numbers for readability</li>
+                <li><strong>Capture:</strong> Raw HTML source code saved from fetched response</li>
+                <li><strong>Format:</strong> Code formatted with line numbers for readability</li>
                 <li><strong>Export:</strong> Users can copy or download HTML for offline validation</li>
             </ol>
         </section>
@@ -110,22 +149,22 @@
         <section>
             <h3>Privacy & Security</h3>
             <ul>
-                <li><strong>No Data Collection:</strong> This tool runs entirely in your browser</li>
+                <li><strong>No Data Collection:</strong> Both tools run entirely in your browser</li>
                 <li><strong>No API Keys Required:</strong> All validation services are free and open</li>
-                <li><strong>Transparent Processing:</strong> Source code is available for inspection</li>
+                <li><strong>Transparent Processing:</strong> Source code available for inspection</li>
                 <li><strong>User Control:</strong> All data stays in your browser and can be cleared anytime</li>
             </ul>
         </section>
 
         <section>
-            <h3>Educational Value</h3>
-            <p>This tool demonstrates:</p>
+            <h3>Educational Value Demonstrated</h3>
             <ul>
                 <li><strong>Progressive Enhancement:</strong> Works without JavaScript where possible</li>
                 <li><strong>Responsive Design:</strong> Adapts to different screen sizes</li>
                 <li><strong>Accessibility First:</strong> Built with semantic HTML and keyboard navigation</li>
                 <li><strong>Modern JavaScript:</strong> Uses ES6+ features with fallbacks for compatibility</li>
                 <li><strong>Performance Awareness:</strong> Minimal dependencies and optimized loading</li>
+                <li><strong>Best Practices:</strong> Clean separation of concerns, validation, and error handling</li>
             </ul>
         </section>
 
@@ -137,26 +176,29 @@
                 <li><strong>WebAIM</strong> for accessibility advocacy and tools</li>
                 <li><strong>Google</strong> for performance analysis and font services</li>
                 <li><strong>FreeFormatter</strong> for providing free developer tools</li>
+                <li><strong>BYU Pathway Worldwide</strong> for the WDD 131 course structure</li>
                 <li><strong>The open-source community</strong> for libraries and inspiration</li>
             </ul>
         </section>
 
         <section>
-            <h3>Note on Usage</h3>
-            <p>All external services are used in accordance with their terms of service. This tool simply provides convenient access links - actual validation happens on the respective service providers' websites. No warranties are provided for third-party service availability or accuracy.</p>
-            
-            <p>All article content in the demo examples is originally written. External images are used for educational purposes only.</p>
-            
-            <p><strong>Content Disclaimer:</strong> Demo articles and content are generated for project demonstration purposes.</p>
-            
-            <p><strong>Image Sources:</strong> Example images are sourced from public domain and free stock photo websites for educational demonstration.</p>
+            <h3>Usage Notes & Disclaimers</h3>
+            <ul>
+                <li>All external services used in accordance with their terms of service</li>
+                <li>Tools provide convenient access links – validation happens on service providers' websites</li>
+                <li>No warranties provided for third-party service availability or accuracy</li>
+                <li>Demo articles and content generated for project demonstration purposes</li>
+                <li>External images used for educational purposes only</li>
+                <li>All projects created as part of web development education and portfolio building</li>
+            </ul>
         </section>
     </main>
 
     <footer>
         <hr>
-        <p>Front-End Designer Audit Tool and Elmalay's tech gossip • Created by Emmanuel Ndogo • </p>
-        <p>This tool is for educational and professional development purposes</p>
+        <p><strong>Created by: Emmanuel Ndogo</strong></p>
+        <p><strong>Projects:</strong> TechHub Blog (WDD 131 Final Project) & Front-End Designer Audit Tool</p>
+        <p><strong>Purpose:</strong> Educational projects and professional development</p>
         <p>&copy; 2025 Emmanuel Ndogo — Tech‑hub | WDD131</p>
     </footer>
 </body>
