@@ -558,9 +558,9 @@ input:focus,
   color: var(--dark-blue);
   opacity: 0.9;
   display: block;
+  line-clamp: 2;
   -webkit-line-clamp: 2;
   -webkit-box-orient: vertical;
-  line-clamp: 2;
   overflow: hidden;
   text-overflow: ellipsis;
 }
